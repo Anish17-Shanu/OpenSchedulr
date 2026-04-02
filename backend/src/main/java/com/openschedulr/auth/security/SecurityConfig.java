@@ -20,6 +20,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableConfigurationProperties(JwtProperties.class)
 public class SecurityConfig {
 
+    private static final String[] PUBLIC_ENDPOINTS = {
+            "/auth/**",
+            "/session/**",
+            "/api/auth/**",
+            "/api/session/**",
+            "/docs/**",
+            "/api/docs/**",
+            "/swagger-ui/**",
+            "/api/swagger-ui/**",
+            "/ws/**",
+            "/api/ws/**",
+            "/actuator/health",
+            "/api/actuator/health"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
@@ -27,7 +42,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/docs/**", "/swagger-ui/**", "/ws/**", "/actuator/health").permitAll()
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, "/faculty/dashboard/**").hasAnyRole("ADMIN", "FACULTY")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

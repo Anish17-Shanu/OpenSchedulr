@@ -1,4 +1,5 @@
 import axios from "axios";
+import type { AxiosError } from "axios";
 import type { Analytics, AuthResponse, Course, Faculty, NotificationItem, Room, TimeSlot, TimetableEntry } from "../types";
 import { useAuthStore } from "../store/auth-store";
 
@@ -15,7 +16,21 @@ api.interceptors.request.use((config) => {
 });
 
 export async function login(email: string, password: string) {
-  const { data } = await api.post<AuthResponse>("/auth/login", { email, password });
+  const payload = { email, password };
+
+  try {
+    const { data } = await api.post<AuthResponse>("/auth/login", payload);
+    return data;
+  } catch (error) {
+    const response = (error as AxiosError).response;
+    const shouldTrySessionFallback = response?.status === 403 || response?.status === 404 || response?.status === 405;
+
+    if (!shouldTrySessionFallback) {
+      throw error;
+    }
+  }
+
+  const { data } = await api.post<AuthResponse>("/session/login", payload);
   return data;
 }
 

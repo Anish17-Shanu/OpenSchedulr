@@ -7,7 +7,7 @@ import { useAuthStore } from "../store/auth-store";
 export function LoginPage() {
   const setAuth = useAuthStore((state) => state.setAuth);
   const [email, setEmail] = useState("admin@openschedulr.dev");
-  const [password, setPassword] = useState("Admin@123");
+  const [password, setPassword] = useState("ChangeThisAdminPassword123!");
 
   const mutation = useMutation({
     mutationFn: () => login(email, password),
@@ -41,20 +41,21 @@ export function LoginPage() {
         <div className="p-8 md:p-10">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-moss">Sign in</p>
           <h2 className="mt-4 text-3xl font-semibold text-ink">Enter the scheduling workspace</h2>
-          <p className="mt-3 text-sm leading-7 text-ink/70">Use the seeded credentials below or replace them with your own once the system is connected to your production database.</p>
+          <p className="mt-3 text-sm leading-7 text-ink/70">Use the deployment credentials below or replace them with your own once the system is connected to your production database.</p>
           <div className="mt-8 space-y-4">
             <input className="w-full rounded-2xl border border-white/70 bg-sand/70 px-4 py-3 outline-none ring-0 transition focus:border-moss/40" value={email} onChange={(e) => setEmail(e.target.value)} />
             <input className="w-full rounded-2xl border border-white/70 bg-sand/70 px-4 py-3 outline-none ring-0 transition focus:border-moss/40" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <Button className="w-full py-3" onClick={() => mutation.mutate()}>
               {mutation.isPending ? "Signing in..." : "Access dashboard"}
             </Button>
-            {mutation.isError ? <p className="rounded-2xl border border-ember/20 bg-ember/5 px-4 py-3 text-sm text-ember">Login failed. Check backend credentials or API availability.</p> : null}
+            {mutation.isError ? <p className="rounded-2xl border border-ember/20 bg-ember/5 px-4 py-3 text-sm text-ember">Login failed. This deployment is usually fixed by verifying the Render admin password override and the Vercel API base URL.</p> : null}
           </div>
           <div className="mt-8 rounded-3xl border border-ink/8 bg-mist/35 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-ink/50">Demo credentials</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-ink/50">Hosted credentials</p>
             <div className="mt-4 space-y-3 text-sm text-ink/75">
-              <p><span className="font-semibold text-ink">Admin:</span> admin@openschedulr.dev / Admin@123</p>
-              <p><span className="font-semibold text-ink">Faculty:</span> faculty1@openschedulr.dev / Faculty@123</p>
+              <p><span className="font-semibold text-ink">Admin:</span> admin@openschedulr.dev / ChangeThisAdminPassword123!</p>
+              <p><span className="font-semibold text-ink">Fallback local default:</span> admin@openschedulr.dev / Admin@123</p>
+              <p><span className="font-semibold text-ink">Tip:</span> if Render still has `BOOTSTRAP_ADMIN_PASSWORD` set, that hosted value overrides the built-in project default.</p>
             </div>
           </div>
         </div>
