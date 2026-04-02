@@ -170,6 +170,40 @@ export function DashboardPage() {
               <StatCard label="Conflicts" value={stats?.totalConflicts ?? 0} helper="Warnings are surfaced early before schedule publication." icon={<Activity className="h-5 w-5" />} accent="from-rose-50 to-white" />
             </div>
 
+            <section className="rounded-[1.75rem] border border-white/50 bg-white/88 p-5 shadow-panel">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-moss">Quick guide</p>
+                  <h2 className="mt-2 text-2xl font-semibold text-ink">Best workflow for publishing a clean timetable</h2>
+                </div>
+                <div className="rounded-full bg-ink/5 px-4 py-2 text-sm font-medium text-ink/70">
+                  {role === "ADMIN" ? "Admin workflow" : "Faculty overview"}
+                </div>
+              </div>
+              <div className="mt-5 grid gap-3 lg:grid-cols-4">
+                <div className="rounded-2xl border border-ink/8 bg-mist/35 p-4">
+                  <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Step 1</p>
+                  <p className="mt-2 font-semibold text-ink">Generate</p>
+                  <p className="mt-2 text-sm leading-6 text-ink/70">Run the solver to create a draft schedule from current teaching demand.</p>
+                </div>
+                <div className="rounded-2xl border border-ink/8 bg-sand/60 p-4">
+                  <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Step 2</p>
+                  <p className="mt-2 font-semibold text-ink">Review</p>
+                  <p className="mt-2 text-sm leading-6 text-ink/70">Inspect conflicts, workload distribution, and room allocation patterns.</p>
+                </div>
+                <div className="rounded-2xl border border-ink/8 bg-amber-50 p-4">
+                  <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Step 3</p>
+                  <p className="mt-2 font-semibold text-ink">Adjust</p>
+                  <p className="mt-2 text-sm leading-6 text-ink/70">Drag any lecture to a new slot to apply a quick manual override.</p>
+                </div>
+                <div className="rounded-2xl border border-ink/8 bg-white p-4">
+                  <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Step 4</p>
+                  <p className="mt-2 font-semibold text-ink">Publish</p>
+                  <p className="mt-2 text-sm leading-6 text-ink/70">Lock the timetable and notify faculty once the week looks stable.</p>
+                </div>
+              </div>
+            </section>
+
             <div className="grid gap-6 2xl:grid-cols-[1.8fr_1fr]">
               <div className="space-y-6">
                 <TimetableBoard

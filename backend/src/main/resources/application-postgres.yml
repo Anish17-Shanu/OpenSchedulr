@@ -1,12 +1,36 @@
 spring:
+  main:
+    lazy-initialization: true
+  jmx:
+    enabled: false
   datasource:
     url: ${DB_URL:jdbc:postgresql://${PGHOST:localhost}:5432/${PGDATABASE:openschedulr}?sslmode=${PGSSLMODE:disable}&channelBinding=${PGCHANNELBINDING:disable}}
     username: ${DB_USERNAME:${PGUSER:openschedulr}}
     password: ${DB_PASSWORD:${PGPASSWORD:openschedulr}}
     driver-class-name: ${DB_DRIVER:org.postgresql.Driver}
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
 
 app:
   seed:
     demo-enabled: ${APP_SEED_DEMO_ENABLED:false}
   realtime:
     enabled: ${APP_REALTIME_ENABLED:false}
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      enabled: true
