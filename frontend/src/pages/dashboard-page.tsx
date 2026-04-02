@@ -16,6 +16,10 @@ import {
   getAnalytics,
   getConflicts,
   getCourses,
+  createCourse,
+  createFaculty,
+  createRoom,
+  createTimeSlot,
   getFaculty,
   getFacultyNotifications,
   getRooms,
@@ -30,6 +34,7 @@ import { StatCard } from "../components/stat-card";
 import { ConflictPanel } from "../components/conflict-panel";
 import { NotificationPanel } from "../components/notification-panel";
 import { TimetableBoard } from "../components/timetable-board";
+import { AdminSetupPanel } from "../components/admin-setup-panel";
 import { Button } from "../components/ui/button";
 import type { NotificationItem } from "../types";
 
@@ -80,6 +85,10 @@ export function DashboardPage() {
       rescheduleEntry(entryId, roomId, timeSlotId),
     onSuccess: refreshAll
   });
+  const createFacultyMutation = useMutation({ mutationFn: createFaculty, onSuccess: refreshAll });
+  const createCourseMutation = useMutation({ mutationFn: createCourse, onSuccess: refreshAll });
+  const createRoomMutation = useMutation({ mutationFn: createRoom, onSuccess: refreshAll });
+  const createTimeSlotMutation = useMutation({ mutationFn: createTimeSlot, onSuccess: refreshAll });
 
   const stats = analyticsQuery.data;
   const timetable = timetableQuery.data ?? [];
@@ -203,6 +212,21 @@ export function DashboardPage() {
                 </div>
               </div>
             </section>
+
+            {role === "ADMIN" ? (
+              <AdminSetupPanel
+                counts={{
+                  faculty: facultyQuery.data?.length ?? 0,
+                  courses: coursesQuery.data?.length ?? 0,
+                  rooms: roomsQuery.data?.length ?? 0,
+                  timeSlots: timeSlotsQuery.data?.length ?? 0
+                }}
+                onCreateFaculty={createFacultyMutation.mutateAsync}
+                onCreateCourse={createCourseMutation.mutateAsync}
+                onCreateRoom={createRoomMutation.mutateAsync}
+                onCreateTimeSlot={createTimeSlotMutation.mutateAsync}
+              />
+            ) : null}
 
             <div className="grid gap-6 2xl:grid-cols-[1.8fr_1fr]">
               <div className="space-y-6">

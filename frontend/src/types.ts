@@ -73,3 +73,35 @@ export interface Analytics {
   totalEntries: number;
   totalConflicts: number;
 }
+
+export interface CreateFacultyPayload {
+  fullName: string;
+  email: string;
+  department: string;
+  maxLoad: number;
+  availability: string;
+  preferences: string;
+  password?: string;
+}
+
+export interface CreateCoursePayload {
+  code: string;
+  title: string;
+  credits: number;
+  requiredHours: number;
+  studentGroup: string;
+  roomType: string;
+}
+
+export interface CreateRoomPayload {
+  name: string;
+  capacity: number;
+  roomType: string;
+}
+
+export interface CreateTimeSlotPayload {
+  dayOfWeek: string;
+  startTime: string;
+  endTime: string;
+  label: string;
+}

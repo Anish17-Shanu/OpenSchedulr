@@ -1,6 +1,19 @@
 import axios from "axios";
 import type { AxiosError } from "axios";
-import type { Analytics, AuthResponse, Course, Faculty, NotificationItem, Room, TimeSlot, TimetableEntry } from "../types";
+import type {
+  Analytics,
+  AuthResponse,
+  Course,
+  CreateCoursePayload,
+  CreateFacultyPayload,
+  CreateRoomPayload,
+  CreateTimeSlotPayload,
+  Faculty,
+  NotificationItem,
+  Room,
+  TimeSlot,
+  TimetableEntry
+} from "../types";
 import { useAuthStore } from "../store/auth-store";
 
 const api = axios.create({
@@ -35,12 +48,12 @@ export async function login(email: string, password: string) {
 }
 
 export async function getFaculty() {
-  const { data } = await api.get<{ content: Faculty[] }>("/faculty");
+  const { data } = await api.get<{ content: Faculty[] }>("/faculty?page=0&size=200");
   return data.content;
 }
 
 export async function getCourses() {
-  const { data } = await api.get<{ content: Course[] }>("/courses");
+  const { data } = await api.get<{ content: Course[] }>("/courses?page=0&size=200");
   return data.content;
 }
 
@@ -85,5 +98,25 @@ export async function getAnalytics() {
 
 export async function getFacultyNotifications(email: string) {
   const { data } = await api.get<NotificationItem[]>(`/faculty/dashboard/${email}/notifications`);
+  return data;
+}
+
+export async function createFaculty(payload: CreateFacultyPayload) {
+  const { data } = await api.post<Faculty>("/faculty", payload);
+  return data;
+}
+
+export async function createCourse(payload: CreateCoursePayload) {
+  const { data } = await api.post<Course>("/courses", payload);
+  return data;
+}
+
+export async function createRoom(payload: CreateRoomPayload) {
+  const { data } = await api.post<Room>("/catalog/rooms", payload);
+  return data;
+}
+
+export async function createTimeSlot(payload: CreateTimeSlotPayload) {
+  const { data } = await api.post<TimeSlot>("/catalog/timeslots", payload);
   return data;
 }

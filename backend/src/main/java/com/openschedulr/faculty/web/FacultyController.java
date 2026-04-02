@@ -1,18 +1,24 @@
 package com.openschedulr.faculty.web;
 
 import com.openschedulr.common.dto.PageResponse;
+import com.openschedulr.faculty.dto.CreateFacultyRequest;
 import com.openschedulr.faculty.dto.FacultyResponse;
 import com.openschedulr.faculty.service.FacultyService;
 import com.openschedulr.notification.dto.NotificationResponse;
 import com.openschedulr.notification.service.NotificationService;
 import com.openschedulr.timetable.dto.TimetableEntryResponse;
 import com.openschedulr.timetable.service.TimetableService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,6 +38,13 @@ public class FacultyController {
     public PageResponse<FacultyResponse> list(@RequestParam(defaultValue = "0") int page,
                                               @RequestParam(defaultValue = "10") int size) {
         return facultyService.list(page, size);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
+    public FacultyResponse create(@Valid @RequestBody CreateFacultyRequest request) {
+        return facultyService.create(request);
     }
 
     @GetMapping("/dashboard/{facultyId}")
