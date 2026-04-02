@@ -8,6 +8,7 @@ import com.openschedulr.notification.model.Notification;
 import com.openschedulr.notification.repository.NotificationRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,7 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
-    private final SimpMessagingTemplate messagingTemplate;
+    private final ObjectProvider<SimpMessagingTemplate> messagingTemplateProvider;
 
     @Transactional
     public void notifyUser(String email, String title, String message) {
@@ -30,7 +31,10 @@ public class NotificationService {
         notification.setMessage(message);
         notification.setReadFlag(false);
         Notification saved = notificationRepository.save(notification);
-        messagingTemplate.convertAndSend("/topic/notifications/" + email, toResponse(saved));
+        SimpMessagingTemplate messagingTemplate = messagingTemplateProvider.getIfAvailable();
+        if (messagingTemplate != null) {
+            messagingTemplate.convertAndSend("/topic/notifications/" + email, toResponse(saved));
+        }
     }
 
     @Transactional(readOnly = true)

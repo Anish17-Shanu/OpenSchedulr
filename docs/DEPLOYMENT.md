@@ -30,6 +30,11 @@ PGPASSWORD=<your-password>
 PGSSLMODE=require
 PGCHANNELBINDING=require
 JWT_SECRET=<your-secret>
+APP_SEED_DEMO_ENABLED=false
+APP_REALTIME_ENABLED=false
+BOOTSTRAP_ADMIN_ENABLED=true
+BOOTSTRAP_ADMIN_EMAIL=admin@openschedulr.dev
+BOOTSTRAP_ADMIN_PASSWORD=<change-this-password>
 ```
 
 7. Health check path:
@@ -85,6 +90,23 @@ VITE_API_ROOT=https://<your-render-backend>/api
 - Database exists
 - Host, database, user, password copied correctly
 - SSL mode required
+
+## Hosted startup behavior
+
+For PostgreSQL-hosted deployments, OpenSchedulr now defaults to:
+
+- demo seed data disabled
+- realtime WebSocket broker disabled
+- bootstrap admin enabled
+
+This keeps cloud startup lighter and more reliable on free tiers while still letting you log in immediately.
+
+You can re-enable richer demo startup with:
+
+```env
+APP_SEED_DEMO_ENABLED=true
+APP_REALTIME_ENABLED=true
+```
 
 ## Local Docker
 

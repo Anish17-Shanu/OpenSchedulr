@@ -42,6 +42,14 @@ app:
     issuer: openschedulr
     secret: ${JWT_SECRET:change-me-change-me-change-me-change-me}
     expiration-minutes: ${JWT_EXPIRATION_MINUTES:480}
+  seed:
+    demo-enabled: ${APP_SEED_DEMO_ENABLED:true}
+  bootstrap-admin:
+    enabled: ${BOOTSTRAP_ADMIN_ENABLED:true}
+    email: ${BOOTSTRAP_ADMIN_EMAIL:admin@openschedulr.dev}
+    password: ${BOOTSTRAP_ADMIN_PASSWORD:Admin@123}
+  realtime:
+    enabled: ${APP_REALTIME_ENABLED:true}
 
 springdoc:
   api-docs:
