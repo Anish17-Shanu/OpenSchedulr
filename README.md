@@ -339,10 +339,12 @@ It runs:
    `JWT_SECRET`
    `APP_SEED_DEMO_ENABLED=false`
    `APP_REALTIME_ENABLED=false`
-   `BOOTSTRAP_ADMIN_ENABLED=true`
-   `BOOTSTRAP_ADMIN_EMAIL=admin@openschedulr.dev`
-   `BOOTSTRAP_ADMIN_PASSWORD=<change-this-password>`
 4. Deploy frontend to Vercel
 5. Set Vercel env vars:
    `VITE_API_BASE_URL=https://<render-backend>/api`
    `VITE_API_ROOT=https://<render-backend>/api`
+
+Hosted default admin credentials are built into the project unless you override them with environment variables:
+
+- `admin@openschedulr.dev`
+- `Admin@123`
