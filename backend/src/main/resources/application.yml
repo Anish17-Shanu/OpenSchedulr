@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: openschedulr
+  datasource:
+    url: ${DB_URL:jdbc:h2:mem:openschedulr;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE;INIT=CREATE DOMAIN IF NOT EXISTS JSONB AS TEXT}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+    driver-class-name: ${DB_DRIVER:org.h2.Driver}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      repositories:
+        enabled: false
+
+server:
+  port: ${PORT:8080}
+  servlet:
+    context-path: /api
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+app:
+  jwt:
+    issuer: openschedulr
+    secret: ${JWT_SECRET:change-me-change-me-change-me-change-me}
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:480}
+
+springdoc:
+  api-docs:
+    path: /docs/api
+  swagger-ui:
+    path: /docs/swagger
+
+optaplanner:
+  solver:
+    termination:
+      spent-limit: 10s

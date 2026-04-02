@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: openschedulr
+      POSTGRES_USER: openschedulr
+      POSTGRES_PASSWORD: openschedulr
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: ../../backend
+    environment:
+      SPRING_PROFILES_ACTIVE: postgres
+      DB_URL: jdbc:postgresql://postgres:5432/openschedulr
+      DB_USERNAME: openschedulr
+      DB_PASSWORD: openschedulr
+      DB_DRIVER: org.postgresql.Driver
+      JWT_SECRET: change-me-change-me-change-me-change-me
+      REDIS_HOST: redis
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+
+  frontend:
+    build:
+      context: ../../frontend
+    environment:
+      VITE_API_BASE_URL: http://localhost:8080/api
+      VITE_API_ROOT: http://localhost:8080/api
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
