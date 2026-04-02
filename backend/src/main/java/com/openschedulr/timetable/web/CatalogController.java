@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,6 +41,14 @@ public class CatalogController {
         return catalogService.createRoom(request, principal.getName());
     }
 
+    @PutMapping("/rooms/{roomId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public RoomResponse updateRoom(@org.springframework.web.bind.annotation.PathVariable UUID roomId,
+                                   @Valid @RequestBody CreateRoomRequest request,
+                                   Principal principal) {
+        return catalogService.updateRoom(roomId, request, principal.getName());
+    }
+
     @GetMapping("/timeslots")
     @PreAuthorize("hasAnyRole('ADMIN','FACULTY')")
     public List<TimeSlotResponse> timeslots() {
@@ -51,6 +60,14 @@ public class CatalogController {
     @PreAuthorize("hasRole('ADMIN')")
     public TimeSlotResponse createTimeSlot(@Valid @RequestBody CreateTimeSlotRequest request, Principal principal) {
         return catalogService.createTimeSlot(request, principal.getName());
+    }
+
+    @PutMapping("/timeslots/{timeSlotId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public TimeSlotResponse updateTimeSlot(@org.springframework.web.bind.annotation.PathVariable UUID timeSlotId,
+                                           @Valid @RequestBody CreateTimeSlotRequest request,
+                                           Principal principal) {
+        return catalogService.updateTimeSlot(timeSlotId, request, principal.getName());
     }
 
     @org.springframework.web.bind.annotation.DeleteMapping("/rooms/{roomId}")

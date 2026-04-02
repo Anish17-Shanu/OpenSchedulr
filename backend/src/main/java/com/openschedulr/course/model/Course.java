@@ -30,4 +30,16 @@ public class Course extends BaseEntity {
 
     @Column(nullable = false)
     private String roomType;
+
+    @Column(nullable = false)
+    private String department;
+
+    @Column(nullable = false)
+    private String program;
+
+    @Column(name = "batch_name", nullable = false)
+    private String batchName;
+
+    @Column(nullable = false)
+    private String section;
 }

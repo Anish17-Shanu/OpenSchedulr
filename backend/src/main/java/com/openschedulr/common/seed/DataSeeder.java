@@ -93,6 +93,7 @@ public class DataSeeder implements CommandLineRunner {
         faculty.setMaxLoad(maxLoad);
         faculty.setAvailability(objectMapper.writeValueAsString(availability));
         faculty.setPreferences(objectMapper.writeValueAsString(preferences));
+        faculty.setSubjects(objectMapper.writeValueAsString(List.of(fullName.contains("Meera") ? "Distributed Systems" : "Database Systems")));
         return facultyRepository.save(faculty);
     }
 
@@ -104,6 +105,10 @@ public class DataSeeder implements CommandLineRunner {
         course.setRequiredHours(requiredHours);
         course.setStudentGroup(studentGroup);
         course.setRoomType(roomType);
+        course.setDepartment(studentGroup.contains("CSE") ? "Computer Science" : "Information Systems");
+        course.setProgram(studentGroup.contains("BTECH") ? "B.Tech" : "General");
+        course.setBatchName(studentGroup.substring(studentGroup.lastIndexOf('-') + 1));
+        course.setSection(studentGroup.contains("CSE") ? "A" : "B");
         return courseRepository.save(course);
     }
 

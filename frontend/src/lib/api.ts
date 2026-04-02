@@ -109,8 +109,18 @@ export async function createFaculty(payload: CreateFacultyPayload) {
   return data;
 }
 
+export async function updateFaculty(facultyId: string, payload: Omit<CreateFacultyPayload, "email" | "password">) {
+  const { data } = await api.put<Faculty>(`/faculty/${facultyId}`, payload);
+  return data;
+}
+
 export async function createCourse(payload: CreateCoursePayload) {
   const { data } = await api.post<Course>("/courses", payload);
+  return data;
+}
+
+export async function updateCourse(courseId: string, payload: CreateCoursePayload) {
+  const { data } = await api.put<Course>(`/courses/${courseId}`, payload);
   return data;
 }
 
@@ -119,8 +129,18 @@ export async function createRoom(payload: CreateRoomPayload) {
   return data;
 }
 
+export async function updateRoom(roomId: string, payload: CreateRoomPayload) {
+  const { data } = await api.put<Room>(`/catalog/rooms/${roomId}`, payload);
+  return data;
+}
+
 export async function createTimeSlot(payload: CreateTimeSlotPayload) {
   const { data } = await api.post<TimeSlot>("/catalog/timeslots", payload);
+  return data;
+}
+
+export async function updateTimeSlot(timeSlotId: string, payload: CreateTimeSlotPayload) {
+  const { data } = await api.put<TimeSlot>(`/catalog/timeslots/${timeSlotId}`, payload);
   return data;
 }
 
@@ -131,6 +151,11 @@ export async function getLectureDemands() {
 
 export async function createLectureDemand(payload: CreateLectureDemandPayload) {
   const { data } = await api.post<LectureDemand>("/scheduling/demands", payload);
+  return data;
+}
+
+export async function updateLectureDemand(demandId: string, payload: CreateLectureDemandPayload) {
+  const { data } = await api.put<LectureDemand>(`/scheduling/demands/${demandId}`, payload);
   return data;
 }
 

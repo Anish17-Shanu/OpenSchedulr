@@ -8,6 +8,7 @@ import com.openschedulr.common.exception.NotFoundException;
 import com.openschedulr.audit.service.AuditService;
 import com.openschedulr.faculty.dto.CreateFacultyRequest;
 import com.openschedulr.faculty.dto.FacultyResponse;
+import com.openschedulr.faculty.dto.UpdateFacultyRequest;
 import com.openschedulr.faculty.model.Faculty;
 import com.openschedulr.faculty.repository.FacultyRepository;
 import com.openschedulr.scheduling.repository.LectureDemandRepository;
@@ -62,9 +63,25 @@ public class FacultyService {
         faculty.setMaxLoad(request.maxLoad());
         faculty.setAvailability(request.availability().trim());
         faculty.setPreferences(request.preferences().trim());
+        faculty.setSubjects(request.subjects().trim());
 
         Faculty saved = facultyRepository.save(faculty);
         auditService.log(actorEmail, "CREATE_FACULTY", "Faculty", saved.getId().toString(), "Created faculty " + saved.getFullName());
+        return toResponse(saved);
+    }
+
+    @Transactional
+    public FacultyResponse update(UUID facultyId, UpdateFacultyRequest request, String actorEmail) {
+        Faculty faculty = facultyRepository.findById(facultyId)
+                .orElseThrow(() -> new NotFoundException("Faculty not found"));
+        faculty.setFullName(request.fullName().trim());
+        faculty.setDepartment(request.department().trim());
+        faculty.setMaxLoad(request.maxLoad());
+        faculty.setAvailability(request.availability().trim());
+        faculty.setPreferences(request.preferences().trim());
+        faculty.setSubjects(request.subjects().trim());
+        Faculty saved = facultyRepository.save(faculty);
+        auditService.log(actorEmail, "UPDATE_FACULTY", "Faculty", facultyId.toString(), "Updated faculty " + saved.getFullName());
         return toResponse(saved);
     }
 
@@ -97,6 +114,7 @@ public class FacultyService {
                 faculty.getDepartment(),
                 faculty.getMaxLoad(),
                 faculty.getAvailability(),
-                faculty.getPreferences());
+                faculty.getPreferences(),
+                faculty.getSubjects());
     }
 }

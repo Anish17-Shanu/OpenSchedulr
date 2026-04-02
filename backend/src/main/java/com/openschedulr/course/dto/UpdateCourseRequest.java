@@ -3,7 +3,7 @@ package com.openschedulr.course.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
-public record CreateCourseRequest(
+public record UpdateCourseRequest(
         @NotBlank String code,
         @NotBlank String title,
         @Min(1) int credits,

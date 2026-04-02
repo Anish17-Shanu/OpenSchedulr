@@ -14,6 +14,7 @@ export interface Faculty {
   maxLoad: number;
   availability: string;
   preferences: string;
+  subjects: string;
 }
 
 export interface Course {
@@ -24,6 +25,10 @@ export interface Course {
   requiredHours: number;
   studentGroup: string;
   roomType: string;
+  department: string;
+  program: string;
+  batchName: string;
+  section: string;
 }
 
 export interface Room {
@@ -47,6 +52,10 @@ export interface TimetableEntry {
   courseCode: string;
   courseTitle: string;
   studentGroup: string;
+  department: string;
+  program: string;
+  batchName: string;
+  section: string;
   facultyId: string;
   facultyName: string;
   roomId: string;
@@ -81,6 +90,7 @@ export interface CreateFacultyPayload {
   maxLoad: number;
   availability: string;
   preferences: string;
+  subjects: string;
   password?: string;
 }
 
@@ -91,6 +101,10 @@ export interface CreateCoursePayload {
   requiredHours: number;
   studentGroup: string;
   roomType: string;
+  department: string;
+  program: string;
+  batchName: string;
+  section: string;
 }
 
 export interface CreateRoomPayload {

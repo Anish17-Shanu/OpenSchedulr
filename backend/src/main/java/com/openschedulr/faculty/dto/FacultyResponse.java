@@ -9,6 +9,7 @@ public record FacultyResponse(
         String department,
         Integer maxLoad,
         String availability,
-        String preferences
+        String preferences,
+        String subjects
 ) {
 }

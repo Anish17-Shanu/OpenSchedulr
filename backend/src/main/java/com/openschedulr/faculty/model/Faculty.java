@@ -35,4 +35,7 @@ public class Faculty extends BaseEntity {
 
     @Column(nullable = false, columnDefinition = "jsonb")
     private String preferences;
+
+    @Column(nullable = false, columnDefinition = "jsonb")
+    private String subjects;
 }

@@ -34,7 +34,12 @@ import {
   getTimeSlots,
   getTimetable,
   publishSchedule,
-  rescheduleEntry
+  rescheduleEntry,
+  updateCourse,
+  updateFaculty,
+  updateLectureDemand,
+  updateRoom,
+  updateTimeSlot
 } from "../lib/api";
 import { subscribeToNotifications } from "../lib/realtime";
 import { useAuthStore } from "../store/auth-store";
@@ -96,10 +101,30 @@ export function DashboardPage() {
     onSuccess: refreshAll
   });
   const createFacultyMutation = useMutation({ mutationFn: createFaculty, onSuccess: refreshAll });
+  const updateFacultyMutation = useMutation({
+    mutationFn: ({ facultyId, payload }: { facultyId: string; payload: Parameters<typeof updateFaculty>[1] }) => updateFaculty(facultyId, payload),
+    onSuccess: refreshAll
+  });
   const createCourseMutation = useMutation({ mutationFn: createCourse, onSuccess: refreshAll });
+  const updateCourseMutation = useMutation({
+    mutationFn: ({ courseId, payload }: { courseId: string; payload: Parameters<typeof updateCourse>[1] }) => updateCourse(courseId, payload),
+    onSuccess: refreshAll
+  });
   const createRoomMutation = useMutation({ mutationFn: createRoom, onSuccess: refreshAll });
+  const updateRoomMutation = useMutation({
+    mutationFn: ({ roomId, payload }: { roomId: string; payload: Parameters<typeof updateRoom>[1] }) => updateRoom(roomId, payload),
+    onSuccess: refreshAll
+  });
   const createTimeSlotMutation = useMutation({ mutationFn: createTimeSlot, onSuccess: refreshAll });
+  const updateTimeSlotMutation = useMutation({
+    mutationFn: ({ timeSlotId, payload }: { timeSlotId: string; payload: Parameters<typeof updateTimeSlot>[1] }) => updateTimeSlot(timeSlotId, payload),
+    onSuccess: refreshAll
+  });
   const createDemandMutation = useMutation({ mutationFn: createLectureDemand, onSuccess: refreshAll });
+  const updateDemandMutation = useMutation({
+    mutationFn: ({ demandId, payload }: { demandId: string; payload: Parameters<typeof updateLectureDemand>[1] }) => updateLectureDemand(demandId, payload),
+    onSuccess: refreshAll
+  });
   const deleteFacultyMutation = useMutation({ mutationFn: deleteFaculty, onSuccess: refreshAll });
   const deleteCourseMutation = useMutation({ mutationFn: deleteCourse, onSuccess: refreshAll });
   const deleteRoomMutation = useMutation({ mutationFn: deleteRoom, onSuccess: refreshAll });
@@ -245,10 +270,15 @@ export function DashboardPage() {
                 demands={demandsQuery.data ?? []}
                 auditLogs={auditLogsQuery.data ?? []}
                 onCreateFaculty={createFacultyMutation.mutateAsync}
+                onUpdateFaculty={(facultyId, payload) => updateFacultyMutation.mutateAsync({ facultyId, payload })}
                 onCreateCourse={createCourseMutation.mutateAsync}
+                onUpdateCourse={(courseId, payload) => updateCourseMutation.mutateAsync({ courseId, payload })}
                 onCreateRoom={createRoomMutation.mutateAsync}
+                onUpdateRoom={(roomId, payload) => updateRoomMutation.mutateAsync({ roomId, payload })}
                 onCreateTimeSlot={createTimeSlotMutation.mutateAsync}
+                onUpdateTimeSlot={(timeSlotId, payload) => updateTimeSlotMutation.mutateAsync({ timeSlotId, payload })}
                 onCreateDemand={createDemandMutation.mutateAsync}
+                onUpdateDemand={(demandId, payload) => updateDemandMutation.mutateAsync({ demandId, payload })}
                 onDeleteFaculty={deleteFacultyMutation.mutateAsync}
                 onDeleteCourse={deleteCourseMutation.mutateAsync}
                 onDeleteRoom={deleteRoomMutation.mutateAsync}

@@ -9,6 +9,10 @@ public record CourseResponse(
         Integer credits,
         Integer requiredHours,
         String studentGroup,
-        String roomType
+        String roomType,
+        String department,
+        String program,
+        String batchName,
+        String section
 ) {
 }

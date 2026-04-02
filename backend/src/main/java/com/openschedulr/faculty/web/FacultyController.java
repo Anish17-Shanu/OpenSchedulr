@@ -3,6 +3,7 @@ package com.openschedulr.faculty.web;
 import com.openschedulr.common.dto.PageResponse;
 import com.openschedulr.faculty.dto.CreateFacultyRequest;
 import com.openschedulr.faculty.dto.FacultyResponse;
+import com.openschedulr.faculty.dto.UpdateFacultyRequest;
 import com.openschedulr.faculty.service.FacultyService;
 import com.openschedulr.notification.dto.NotificationResponse;
 import com.openschedulr.notification.service.NotificationService;
@@ -15,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,6 +48,14 @@ public class FacultyController {
     @PreAuthorize("hasRole('ADMIN')")
     public FacultyResponse create(@Valid @RequestBody CreateFacultyRequest request, Principal principal) {
         return facultyService.create(request, principal.getName());
+    }
+
+    @PutMapping("/{facultyId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public FacultyResponse update(@PathVariable UUID facultyId,
+                                  @Valid @RequestBody UpdateFacultyRequest request,
+                                  Principal principal) {
+        return facultyService.update(facultyId, request, principal.getName());
     }
 
     @org.springframework.web.bind.annotation.DeleteMapping("/{facultyId}")

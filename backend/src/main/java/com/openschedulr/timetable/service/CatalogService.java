@@ -58,6 +58,17 @@ public class CatalogService {
     }
 
     @Transactional
+    public RoomResponse updateRoom(java.util.UUID roomId, CreateRoomRequest request, String actorEmail) {
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new NotFoundException("Room not found"));
+        room.setName(request.name().trim());
+        room.setCapacity(request.capacity());
+        room.setRoomType(request.roomType().trim());
+        Room savedRoom = roomRepository.save(room);
+        auditService.log(actorEmail, "UPDATE_ROOM", "Room", roomId.toString(), "Updated room " + savedRoom.getName());
+        return new RoomResponse(savedRoom.getId(), savedRoom.getName(), savedRoom.getCapacity(), savedRoom.getRoomType());
+    }
+
+    @Transactional
     public TimeSlotResponse createTimeSlot(CreateTimeSlotRequest request, String actorEmail) {
         if (!request.endTime().isAfter(request.startTime())) {
             throw new IllegalArgumentException("End time must be after start time");
@@ -73,6 +84,21 @@ public class CatalogService {
         timeSlot.setLabel(request.label().trim());
         TimeSlot savedSlot = timeSlotRepository.save(timeSlot);
         auditService.log(actorEmail, "CREATE_TIMESLOT", "TimeSlot", savedSlot.getId().toString(), "Created timeslot " + savedSlot.getLabel());
+        return new TimeSlotResponse(savedSlot.getId(), savedSlot.getDayOfWeek(), savedSlot.getStartTime(), savedSlot.getEndTime(), savedSlot.getLabel());
+    }
+
+    @Transactional
+    public TimeSlotResponse updateTimeSlot(java.util.UUID timeSlotId, CreateTimeSlotRequest request, String actorEmail) {
+        if (!request.endTime().isAfter(request.startTime())) {
+            throw new IllegalArgumentException("End time must be after start time");
+        }
+        TimeSlot timeSlot = timeSlotRepository.findById(timeSlotId).orElseThrow(() -> new NotFoundException("Timeslot not found"));
+        timeSlot.setDayOfWeek(request.dayOfWeek());
+        timeSlot.setStartTime(request.startTime());
+        timeSlot.setEndTime(request.endTime());
+        timeSlot.setLabel(request.label().trim());
+        TimeSlot savedSlot = timeSlotRepository.save(timeSlot);
+        auditService.log(actorEmail, "UPDATE_TIMESLOT", "TimeSlot", timeSlotId.toString(), "Updated timeslot " + savedSlot.getLabel());
         return new TimeSlotResponse(savedSlot.getId(), savedSlot.getDayOfWeek(), savedSlot.getStartTime(), savedSlot.getEndTime(), savedSlot.getLabel());
     }
 

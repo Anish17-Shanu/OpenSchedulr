@@ -3,6 +3,7 @@ package com.openschedulr.course.web;
 import com.openschedulr.common.dto.PageResponse;
 import com.openschedulr.course.dto.CreateCourseRequest;
 import com.openschedulr.course.dto.CourseResponse;
+import com.openschedulr.course.dto.UpdateCourseRequest;
 import com.openschedulr.course.service.CourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import java.security.Principal;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +40,14 @@ public class CourseController {
     @PreAuthorize("hasRole('ADMIN')")
     public CourseResponse create(@Valid @RequestBody CreateCourseRequest request, Principal principal) {
         return courseService.create(request, principal.getName());
+    }
+
+    @PutMapping("/{courseId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public CourseResponse update(@org.springframework.web.bind.annotation.PathVariable UUID courseId,
+                                 @Valid @RequestBody UpdateCourseRequest request,
+                                 Principal principal) {
+        return courseService.update(courseId, request, principal.getName());
     }
 
     @DeleteMapping("/{courseId}")

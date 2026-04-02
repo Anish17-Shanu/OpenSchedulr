@@ -48,6 +48,23 @@ public class LectureDemandService {
     }
 
     @Transactional
+    public LectureDemandResponse update(java.util.UUID demandId, CreateLectureDemandRequest request, String actorEmail) {
+        LectureDemand demand = lectureDemandRepository.findById(demandId)
+                .orElseThrow(() -> new NotFoundException("Lecture demand not found"));
+        var course = courseRepository.findById(request.courseId())
+                .orElseThrow(() -> new NotFoundException("Course not found"));
+        var faculty = facultyRepository.findById(request.facultyId())
+                .orElseThrow(() -> new NotFoundException("Faculty not found"));
+        demand.setCourse(course);
+        demand.setFaculty(faculty);
+        demand.setSessionsPerWeek(request.sessionsPerWeek());
+        LectureDemand saved = lectureDemandRepository.save(demand);
+        auditService.log(actorEmail, "UPDATE_LECTURE_DEMAND", "LectureDemand", demandId.toString(),
+                "Updated " + course.getCode() + " demand for " + faculty.getFullName());
+        return toResponse(saved);
+    }
+
+    @Transactional
     public void delete(java.util.UUID demandId, String actorEmail) {
         LectureDemand demand = lectureDemandRepository.findById(demandId)
                 .orElseThrow(() -> new NotFoundException("Lecture demand not found"));

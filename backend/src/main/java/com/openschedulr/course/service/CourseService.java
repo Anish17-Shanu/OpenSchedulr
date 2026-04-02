@@ -5,6 +5,7 @@ import com.openschedulr.common.exception.NotFoundException;
 import com.openschedulr.common.dto.PageResponse;
 import com.openschedulr.course.dto.CreateCourseRequest;
 import com.openschedulr.course.dto.CourseResponse;
+import com.openschedulr.course.dto.UpdateCourseRequest;
 import com.openschedulr.course.model.Course;
 import com.openschedulr.course.repository.CourseRepository;
 import com.openschedulr.scheduling.repository.LectureDemandRepository;
@@ -43,8 +44,31 @@ public class CourseService {
         course.setRequiredHours(request.requiredHours());
         course.setStudentGroup(request.studentGroup().trim());
         course.setRoomType(request.roomType().trim());
+        course.setDepartment(request.department().trim());
+        course.setProgram(request.program().trim());
+        course.setBatchName(request.batchName().trim());
+        course.setSection(request.section().trim());
         Course saved = courseRepository.save(course);
         auditService.log(actorEmail, "CREATE_COURSE", "Course", saved.getId().toString(), "Created course " + saved.getCode());
+        return toResponse(saved);
+    }
+
+    @Transactional
+    public CourseResponse update(UUID courseId, UpdateCourseRequest request, String actorEmail) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("Course not found"));
+        course.setCode(request.code().trim().toUpperCase());
+        course.setTitle(request.title().trim());
+        course.setCredits(request.credits());
+        course.setRequiredHours(request.requiredHours());
+        course.setStudentGroup(request.studentGroup().trim());
+        course.setRoomType(request.roomType().trim());
+        course.setDepartment(request.department().trim());
+        course.setProgram(request.program().trim());
+        course.setBatchName(request.batchName().trim());
+        course.setSection(request.section().trim());
+        Course saved = courseRepository.save(course);
+        auditService.log(actorEmail, "UPDATE_COURSE", "Course", courseId.toString(), "Updated course " + saved.getCode());
         return toResponse(saved);
     }
 
@@ -68,6 +92,10 @@ public class CourseService {
                 course.getCredits(),
                 course.getRequiredHours(),
                 course.getStudentGroup(),
-                course.getRoomType());
+                course.getRoomType(),
+                course.getDepartment(),
+                course.getProgram(),
+                course.getBatchName(),
+                course.getSection());
     }
 }
