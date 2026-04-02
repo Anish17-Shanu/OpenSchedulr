@@ -28,11 +28,7 @@ public class BootstrapAdminRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (userRepository.findByEmailIgnoreCase(email).isPresent()) {
-            return;
-        }
-
-        User admin = new User();
+        User admin = userRepository.findByEmailIgnoreCase(email).orElseGet(User::new);
         admin.setEmail(email);
         admin.setPassword(passwordEncoder.encode(password));
         admin.setRole(Role.ADMIN);
