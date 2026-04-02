@@ -6,6 +6,8 @@ import com.openschedulr.timetable.dto.RoomResponse;
 import com.openschedulr.timetable.dto.TimeSlotResponse;
 import com.openschedulr.timetable.service.CatalogService;
 import jakarta.validation.Valid;
+import java.security.Principal;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,8 +36,8 @@ public class CatalogController {
     @PostMapping("/rooms")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
-    public RoomResponse createRoom(@Valid @RequestBody CreateRoomRequest request) {
-        return catalogService.createRoom(request);
+    public RoomResponse createRoom(@Valid @RequestBody CreateRoomRequest request, Principal principal) {
+        return catalogService.createRoom(request, principal.getName());
     }
 
     @GetMapping("/timeslots")
@@ -47,7 +49,21 @@ public class CatalogController {
     @PostMapping("/timeslots")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
-    public TimeSlotResponse createTimeSlot(@Valid @RequestBody CreateTimeSlotRequest request) {
-        return catalogService.createTimeSlot(request);
+    public TimeSlotResponse createTimeSlot(@Valid @RequestBody CreateTimeSlotRequest request, Principal principal) {
+        return catalogService.createTimeSlot(request, principal.getName());
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/rooms/{roomId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteRoom(@org.springframework.web.bind.annotation.PathVariable UUID roomId, Principal principal) {
+        catalogService.deleteRoom(roomId, principal.getName());
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/timeslots/{timeSlotId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteTimeSlot(@org.springframework.web.bind.annotation.PathVariable UUID timeSlotId, Principal principal) {
+        catalogService.deleteTimeSlot(timeSlotId, principal.getName());
     }
 }

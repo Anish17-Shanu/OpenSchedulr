@@ -7,4 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TimetableEntryRepository extends JpaRepository<TimetableEntry, UUID> {
     List<TimetableEntry> findAllByFacultyId(UUID facultyId);
+    long countByFacultyId(UUID facultyId);
+    long countByCourseId(UUID courseId);
+    long countByRoomId(UUID roomId);
+    long countByTimeSlotId(UUID timeSlotId);
 }

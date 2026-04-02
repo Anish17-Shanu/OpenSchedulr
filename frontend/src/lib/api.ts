@@ -2,13 +2,16 @@ import axios from "axios";
 import type { AxiosError } from "axios";
 import type {
   Analytics,
+  AuditLog,
   AuthResponse,
   Course,
   CreateCoursePayload,
   CreateFacultyPayload,
+  CreateLectureDemandPayload,
   CreateRoomPayload,
   CreateTimeSlotPayload,
   Faculty,
+  LectureDemand,
   NotificationItem,
   Room,
   TimeSlot,
@@ -118,5 +121,40 @@ export async function createRoom(payload: CreateRoomPayload) {
 
 export async function createTimeSlot(payload: CreateTimeSlotPayload) {
   const { data } = await api.post<TimeSlot>("/catalog/timeslots", payload);
+  return data;
+}
+
+export async function getLectureDemands() {
+  const { data } = await api.get<LectureDemand[]>("/scheduling/demands");
+  return data;
+}
+
+export async function createLectureDemand(payload: CreateLectureDemandPayload) {
+  const { data } = await api.post<LectureDemand>("/scheduling/demands", payload);
+  return data;
+}
+
+export async function deleteLectureDemand(demandId: string) {
+  await api.delete(`/scheduling/demands/${demandId}`);
+}
+
+export async function deleteFaculty(facultyId: string) {
+  await api.delete(`/faculty/${facultyId}`);
+}
+
+export async function deleteCourse(courseId: string) {
+  await api.delete(`/courses/${courseId}`);
+}
+
+export async function deleteRoom(roomId: string) {
+  await api.delete(`/catalog/rooms/${roomId}`);
+}
+
+export async function deleteTimeSlot(timeSlotId: string) {
+  await api.delete(`/catalog/timeslots/${timeSlotId}`);
+}
+
+export async function getAuditLogs() {
+  const { data } = await api.get<AuditLog[]>("/audit/logs?limit=20");
   return data;
 }

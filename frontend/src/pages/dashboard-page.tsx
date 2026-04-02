@@ -12,16 +12,24 @@ import {
   Users
 } from "lucide-react";
 import {
-  generateSchedule,
-  getAnalytics,
-  getConflicts,
-  getCourses,
   createCourse,
   createFaculty,
+  createLectureDemand,
   createRoom,
   createTimeSlot,
+  deleteCourse,
+  deleteFaculty,
+  deleteLectureDemand,
+  deleteRoom,
+  deleteTimeSlot,
+  generateSchedule,
+  getAnalytics,
+  getAuditLogs,
+  getConflicts,
+  getCourses,
   getFaculty,
   getFacultyNotifications,
+  getLectureDemands,
   getRooms,
   getTimeSlots,
   getTimetable,
@@ -47,6 +55,8 @@ export function DashboardPage() {
   const coursesQuery = useQuery({ queryKey: ["courses"], queryFn: getCourses });
   const roomsQuery = useQuery({ queryKey: ["rooms"], queryFn: getRooms });
   const timeSlotsQuery = useQuery({ queryKey: ["timeslots"], queryFn: getTimeSlots });
+  const demandsQuery = useQuery({ queryKey: ["lecture-demands"], queryFn: getLectureDemands, enabled: role === "ADMIN" });
+  const auditLogsQuery = useQuery({ queryKey: ["audit-logs"], queryFn: getAuditLogs, enabled: role === "ADMIN" });
   const timetableQuery = useQuery({ queryKey: ["timetable"], queryFn: getTimetable });
   const conflictsQuery = useQuery({ queryKey: ["conflicts"], queryFn: getConflicts });
   const analyticsQuery = useQuery({ queryKey: ["analytics"], queryFn: getAnalytics });
@@ -89,6 +99,12 @@ export function DashboardPage() {
   const createCourseMutation = useMutation({ mutationFn: createCourse, onSuccess: refreshAll });
   const createRoomMutation = useMutation({ mutationFn: createRoom, onSuccess: refreshAll });
   const createTimeSlotMutation = useMutation({ mutationFn: createTimeSlot, onSuccess: refreshAll });
+  const createDemandMutation = useMutation({ mutationFn: createLectureDemand, onSuccess: refreshAll });
+  const deleteFacultyMutation = useMutation({ mutationFn: deleteFaculty, onSuccess: refreshAll });
+  const deleteCourseMutation = useMutation({ mutationFn: deleteCourse, onSuccess: refreshAll });
+  const deleteRoomMutation = useMutation({ mutationFn: deleteRoom, onSuccess: refreshAll });
+  const deleteTimeSlotMutation = useMutation({ mutationFn: deleteTimeSlot, onSuccess: refreshAll });
+  const deleteDemandMutation = useMutation({ mutationFn: deleteLectureDemand, onSuccess: refreshAll });
 
   const stats = analyticsQuery.data;
   const timetable = timetableQuery.data ?? [];
@@ -219,12 +235,25 @@ export function DashboardPage() {
                   faculty: facultyQuery.data?.length ?? 0,
                   courses: coursesQuery.data?.length ?? 0,
                   rooms: roomsQuery.data?.length ?? 0,
-                  timeSlots: timeSlotsQuery.data?.length ?? 0
+                  timeSlots: timeSlotsQuery.data?.length ?? 0,
+                  demands: demandsQuery.data?.length ?? 0
                 }}
+                faculty={facultyQuery.data ?? []}
+                courses={coursesQuery.data ?? []}
+                rooms={roomsQuery.data ?? []}
+                timeSlots={timeSlotsQuery.data ?? []}
+                demands={demandsQuery.data ?? []}
+                auditLogs={auditLogsQuery.data ?? []}
                 onCreateFaculty={createFacultyMutation.mutateAsync}
                 onCreateCourse={createCourseMutation.mutateAsync}
                 onCreateRoom={createRoomMutation.mutateAsync}
                 onCreateTimeSlot={createTimeSlotMutation.mutateAsync}
+                onCreateDemand={createDemandMutation.mutateAsync}
+                onDeleteFaculty={deleteFacultyMutation.mutateAsync}
+                onDeleteCourse={deleteCourseMutation.mutateAsync}
+                onDeleteRoom={deleteRoomMutation.mutateAsync}
+                onDeleteTimeSlot={deleteTimeSlotMutation.mutateAsync}
+                onDeleteDemand={deleteDemandMutation.mutateAsync}
               />
             ) : null}
 

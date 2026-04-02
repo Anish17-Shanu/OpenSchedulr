@@ -5,10 +5,13 @@ import com.openschedulr.auth.model.User;
 import com.openschedulr.auth.repository.UserRepository;
 import com.openschedulr.common.dto.PageResponse;
 import com.openschedulr.common.exception.NotFoundException;
+import com.openschedulr.audit.service.AuditService;
 import com.openschedulr.faculty.dto.CreateFacultyRequest;
 import com.openschedulr.faculty.dto.FacultyResponse;
 import com.openschedulr.faculty.model.Faculty;
 import com.openschedulr.faculty.repository.FacultyRepository;
+import com.openschedulr.scheduling.repository.LectureDemandRepository;
+import com.openschedulr.timetable.repository.TimetableEntryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +27,9 @@ public class FacultyService {
     private final FacultyRepository facultyRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final LectureDemandRepository lectureDemandRepository;
+    private final TimetableEntryRepository timetableEntryRepository;
+    private final AuditService auditService;
 
     @Transactional(readOnly = true)
     public PageResponse<FacultyResponse> list(int page, int size) {
@@ -39,7 +45,7 @@ public class FacultyService {
     }
 
     @Transactional
-    public FacultyResponse create(CreateFacultyRequest request) {
+    public FacultyResponse create(CreateFacultyRequest request, String actorEmail) {
         if (userRepository.existsByEmailIgnoreCase(request.email())) {
             throw new IllegalArgumentException("A user with this email already exists");
         }
@@ -57,7 +63,23 @@ public class FacultyService {
         faculty.setAvailability(request.availability().trim());
         faculty.setPreferences(request.preferences().trim());
 
-        return toResponse(facultyRepository.save(faculty));
+        Faculty saved = facultyRepository.save(faculty);
+        auditService.log(actorEmail, "CREATE_FACULTY", "Faculty", saved.getId().toString(), "Created faculty " + saved.getFullName());
+        return toResponse(saved);
+    }
+
+    @Transactional
+    public void delete(UUID facultyId, String actorEmail) {
+        Faculty faculty = facultyRepository.findById(facultyId)
+                .orElseThrow(() -> new NotFoundException("Faculty not found"));
+        if (lectureDemandRepository.countByFacultyId(facultyId) > 0 || timetableEntryRepository.countByFacultyId(facultyId) > 0) {
+            throw new IllegalArgumentException("Remove lecture demands and timetable entries before deleting this faculty");
+        }
+        String name = faculty.getFullName();
+        User user = faculty.getUser();
+        facultyRepository.delete(faculty);
+        userRepository.delete(user);
+        auditService.log(actorEmail, "DELETE_FACULTY", "Faculty", facultyId.toString(), "Deleted faculty " + name);
     }
 
     private String resolvePassword(String password) {

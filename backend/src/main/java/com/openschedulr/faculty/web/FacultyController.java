@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/faculty")
@@ -43,8 +44,15 @@ public class FacultyController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
-    public FacultyResponse create(@Valid @RequestBody CreateFacultyRequest request) {
-        return facultyService.create(request);
+    public FacultyResponse create(@Valid @RequestBody CreateFacultyRequest request, Principal principal) {
+        return facultyService.create(request, principal.getName());
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/{facultyId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
+    public void delete(@PathVariable UUID facultyId, Principal principal) {
+        facultyService.delete(facultyId, principal.getName());
     }
 
     @GetMapping("/dashboard/{facultyId}")

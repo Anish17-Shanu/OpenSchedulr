@@ -1,10 +1,15 @@
 package com.openschedulr.course.service;
 
+import com.openschedulr.audit.service.AuditService;
+import com.openschedulr.common.exception.NotFoundException;
 import com.openschedulr.common.dto.PageResponse;
 import com.openschedulr.course.dto.CreateCourseRequest;
 import com.openschedulr.course.dto.CourseResponse;
 import com.openschedulr.course.model.Course;
 import com.openschedulr.course.repository.CourseRepository;
+import com.openschedulr.scheduling.repository.LectureDemandRepository;
+import com.openschedulr.timetable.repository.TimetableEntryRepository;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final LectureDemandRepository lectureDemandRepository;
+    private final TimetableEntryRepository timetableEntryRepository;
+    private final AuditService auditService;
 
     @Transactional(readOnly = true)
     public PageResponse<CourseResponse> list(int page, int size) {
@@ -23,7 +31,7 @@ public class CourseService {
     }
 
     @Transactional
-    public CourseResponse create(CreateCourseRequest request) {
+    public CourseResponse create(CreateCourseRequest request, String actorEmail) {
         if (courseRepository.existsByCodeIgnoreCase(request.code())) {
             throw new IllegalArgumentException("A course with this code already exists");
         }
@@ -35,7 +43,21 @@ public class CourseService {
         course.setRequiredHours(request.requiredHours());
         course.setStudentGroup(request.studentGroup().trim());
         course.setRoomType(request.roomType().trim());
-        return toResponse(courseRepository.save(course));
+        Course saved = courseRepository.save(course);
+        auditService.log(actorEmail, "CREATE_COURSE", "Course", saved.getId().toString(), "Created course " + saved.getCode());
+        return toResponse(saved);
+    }
+
+    @Transactional
+    public void delete(UUID courseId, String actorEmail) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("Course not found"));
+        if (lectureDemandRepository.countByCourseId(courseId) > 0 || timetableEntryRepository.countByCourseId(courseId) > 0) {
+            throw new IllegalArgumentException("Remove lecture demands and timetable entries before deleting this course");
+        }
+        String code = course.getCode();
+        courseRepository.delete(course);
+        auditService.log(actorEmail, "DELETE_COURSE", "Course", courseId.toString(), "Deleted course " + code);
     }
 
     public CourseResponse toResponse(Course course) {

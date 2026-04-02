@@ -1,5 +1,8 @@
 package com.openschedulr.timetable.service;
 
+import com.openschedulr.audit.service.AuditService;
+import com.openschedulr.common.exception.NotFoundException;
+import com.openschedulr.scheduling.repository.LectureDemandRepository;
 import com.openschedulr.timetable.dto.CreateRoomRequest;
 import com.openschedulr.timetable.dto.CreateTimeSlotRequest;
 import com.openschedulr.timetable.dto.RoomResponse;
@@ -8,6 +11,7 @@ import com.openschedulr.timetable.model.Room;
 import com.openschedulr.timetable.model.TimeSlot;
 import com.openschedulr.timetable.repository.RoomRepository;
 import com.openschedulr.timetable.repository.TimeSlotRepository;
+import com.openschedulr.timetable.repository.TimetableEntryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +24,9 @@ public class CatalogService {
 
     private final RoomRepository roomRepository;
     private final TimeSlotRepository timeSlotRepository;
+    private final TimetableEntryRepository timetableEntryRepository;
+    private final LectureDemandRepository lectureDemandRepository;
+    private final AuditService auditService;
 
     @Transactional(readOnly = true)
     public List<RoomResponse> getRooms() {
@@ -36,7 +43,7 @@ public class CatalogService {
     }
 
     @Transactional
-    public RoomResponse createRoom(CreateRoomRequest request) {
+    public RoomResponse createRoom(CreateRoomRequest request, String actorEmail) {
         if (roomRepository.existsByNameIgnoreCase(request.name())) {
             throw new IllegalArgumentException("A room with this name already exists");
         }
@@ -46,11 +53,12 @@ public class CatalogService {
         room.setCapacity(request.capacity());
         room.setRoomType(request.roomType().trim());
         Room savedRoom = roomRepository.save(room);
+        auditService.log(actorEmail, "CREATE_ROOM", "Room", savedRoom.getId().toString(), "Created room " + savedRoom.getName());
         return new RoomResponse(savedRoom.getId(), savedRoom.getName(), savedRoom.getCapacity(), savedRoom.getRoomType());
     }
 
     @Transactional
-    public TimeSlotResponse createTimeSlot(CreateTimeSlotRequest request) {
+    public TimeSlotResponse createTimeSlot(CreateTimeSlotRequest request, String actorEmail) {
         if (!request.endTime().isAfter(request.startTime())) {
             throw new IllegalArgumentException("End time must be after start time");
         }
@@ -64,6 +72,27 @@ public class CatalogService {
         timeSlot.setEndTime(request.endTime());
         timeSlot.setLabel(request.label().trim());
         TimeSlot savedSlot = timeSlotRepository.save(timeSlot);
+        auditService.log(actorEmail, "CREATE_TIMESLOT", "TimeSlot", savedSlot.getId().toString(), "Created timeslot " + savedSlot.getLabel());
         return new TimeSlotResponse(savedSlot.getId(), savedSlot.getDayOfWeek(), savedSlot.getStartTime(), savedSlot.getEndTime(), savedSlot.getLabel());
+    }
+
+    @Transactional
+    public void deleteRoom(java.util.UUID roomId, String actorEmail) {
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new NotFoundException("Room not found"));
+        if (timetableEntryRepository.countByRoomId(roomId) > 0) {
+            throw new IllegalArgumentException("Remove timetable entries before deleting this room");
+        }
+        roomRepository.delete(room);
+        auditService.log(actorEmail, "DELETE_ROOM", "Room", roomId.toString(), "Deleted room " + room.getName());
+    }
+
+    @Transactional
+    public void deleteTimeSlot(java.util.UUID timeSlotId, String actorEmail) {
+        TimeSlot slot = timeSlotRepository.findById(timeSlotId).orElseThrow(() -> new NotFoundException("Timeslot not found"));
+        if (timetableEntryRepository.countByTimeSlotId(timeSlotId) > 0) {
+            throw new IllegalArgumentException("Remove timetable entries before deleting this timeslot");
+        }
+        timeSlotRepository.delete(slot);
+        auditService.log(actorEmail, "DELETE_TIMESLOT", "TimeSlot", timeSlotId.toString(), "Deleted timeslot " + slot.getLabel());
     }
 }

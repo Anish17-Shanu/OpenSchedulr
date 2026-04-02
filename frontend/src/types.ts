@@ -105,3 +105,29 @@ export interface CreateTimeSlotPayload {
   endTime: string;
   label: string;
 }
+
+export interface LectureDemand {
+  id: string;
+  courseId: string;
+  courseCode: string;
+  courseTitle: string;
+  facultyId: string;
+  facultyName: string;
+  sessionsPerWeek: number;
+}
+
+export interface CreateLectureDemandPayload {
+  courseId: string;
+  facultyId: string;
+  sessionsPerWeek: number;
+}
+
+export interface AuditLog {
+  id: string;
+  actorEmail: string;
+  action: string;
+  targetType: string;
+  targetId: string;
+  detail: string;
+  createdAt: string;
+}

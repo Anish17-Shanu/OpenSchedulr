@@ -1,7 +1,9 @@
 package com.openschedulr.audit.service;
 
+import com.openschedulr.audit.dto.AuditLogResponse;
 import com.openschedulr.audit.model.AuditLog;
 import com.openschedulr.audit.repository.AuditLogRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +21,20 @@ public class AuditService {
         auditLog.setTargetId(targetId);
         auditLog.setDetail(detail);
         auditLogRepository.save(auditLog);
+    }
+
+    public List<AuditLogResponse> getRecentLogs(int limit) {
+        return auditLogRepository.findAll().stream()
+                .sorted((left, right) -> right.getCreatedAt().compareTo(left.getCreatedAt()))
+                .limit(limit)
+                .map(log -> new AuditLogResponse(
+                        log.getId(),
+                        log.getActorEmail(),
+                        log.getAction(),
+                        log.getTargetType(),
+                        log.getTargetId(),
+                        log.getDetail(),
+                        log.getCreatedAt()))
+                .toList();
     }
 }
