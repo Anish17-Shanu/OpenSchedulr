@@ -2,19 +2,89 @@
 
 OpenSchedulr supports only free-tier or self-hosted deployment patterns.
 
+## Easiest deploy path
+
+Use this combination if you want the least friction:
+
+1. Backend on Render
+2. Database on Neon
+3. Frontend on Vercel
+
 ## Render backend
 
 1. Push the repository to GitHub.
 2. Create a new Render Web Service from the repo.
-3. Use [render.yaml](/d:/Project/OpenSchedulr/render.yaml) or the Dockerfile path `backend/Dockerfile`.
-4. Attach a free PostgreSQL database from Neon or Supabase.
-5. Set environment variables from [backend/.env.example](/d:/Project/OpenSchedulr/backend/.env.example).
+3. Use [render.yaml](/d:/Project/OpenSchedulr/render.yaml).
+4. Render should detect:
+   `rootDir=backend`
+   `dockerfilePath=./Dockerfile`
+5. Attach a free PostgreSQL database from Neon or Supabase.
+6. Set these environment variables:
+
+```env
+SPRING_PROFILES_ACTIVE=postgres
+PGHOST=<your-neon-host>
+PGDATABASE=OpenSchedulr
+PGUSER=<your-user>
+PGPASSWORD=<your-password>
+PGSSLMODE=require
+PGCHANNELBINDING=require
+JWT_SECRET=<your-secret>
+```
+
+7. Health check path:
+   `/api/actuator/health`
 
 ## Vercel frontend
 
-1. Import `frontend/` into Vercel.
-2. Set `VITE_API_BASE_URL` and `VITE_API_ROOT`.
-3. Use [vercel.json](/d:/Project/OpenSchedulr/vercel.json) for Vite-compatible output.
+### Option A: deploy repo root directly
+
+1. Import the whole repository into Vercel.
+2. Vercel will use the root [vercel.json](/d:/Project/OpenSchedulr/vercel.json).
+3. Set:
+
+```env
+VITE_API_BASE_URL=https://<your-render-backend>/api
+VITE_API_ROOT=https://<your-render-backend>/api
+```
+
+### Option B: deploy only `frontend/`
+
+1. In Vercel, set the root directory to `frontend`
+2. Vercel will use [frontend/vercel.json](/d:/Project/OpenSchedulr/frontend/vercel.json)
+3. Set the same `VITE_API_*` variables
+
+## Common deployment mistakes
+
+- Deploying the repo root to Vercel without a root `vercel.json`
+- Forgetting that Vite needs `VITE_*` env vars at build time
+- Using Neon credentials without enabling `SPRING_PROFILES_ACTIVE=postgres`
+- Supplying only raw `PG*` values to older app config that expects `DB_URL`
+- Not setting the Render health check path to `/api/actuator/health`
+- Forgetting to rotate secrets after testing
+
+## Quick platform checklist
+
+### Render
+
+- Repo connected
+- Root directory: `backend`
+- Dockerfile: `./Dockerfile`
+- Health path: `/api/actuator/health`
+- Env vars set
+
+### Vercel
+
+- Either deploy root repo or `frontend/`
+- `VITE_API_BASE_URL` set
+- `VITE_API_ROOT` set
+- Build succeeds with production API URL
+
+### Neon
+
+- Database exists
+- Host, database, user, password copied correctly
+- SSL mode required
 
 ## Local Docker
 

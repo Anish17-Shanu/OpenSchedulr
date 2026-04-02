@@ -3,18 +3,30 @@ services:
     name: openschedulr-backend
     env: docker
     plan: free
-    dockerfilePath: ./backend/Dockerfile
-    rootDir: .
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/actuator/health
+    autoDeploy: true
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: postgres
+      - key: PGHOST
+        sync: false
+      - key: PGDATABASE
+        sync: false
+      - key: PGUSER
+        sync: false
+      - key: PGPASSWORD
+        sync: false
+      - key: PGSSLMODE
+        value: require
+      - key: PGCHANNELBINDING
+        value: require
       - key: DB_URL
         sync: false
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
         sync: false
-      - key: DB_DRIVER
-        value: org.postgresql.Driver
       - key: JWT_SECRET
         generateValue: true

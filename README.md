@@ -129,6 +129,15 @@ Important variables:
 - `REDIS_HOST=localhost`
 - `REDIS_PORT=6379`
 
+Alternative PostgreSQL variables also supported directly:
+
+- `PGHOST`
+- `PGDATABASE`
+- `PGUSER`
+- `PGPASSWORD`
+- `PGSSLMODE`
+- `PGCHANNELBINDING`
+
 ### Frontend
 
 Example file: `frontend/.env.example`
@@ -163,6 +172,27 @@ mvn spring-boot:run
 ```
 
 Flyway will create the schema automatically.
+
+### Run with Neon-style variables
+
+You can also use provider-style PostgreSQL variables directly, without manually building `DB_URL`.
+
+Windows PowerShell:
+
+```powershell
+$env:JAVA_HOME="C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot"
+$env:Path="$env:JAVA_HOME\bin;$env:Path"
+$env:SPRING_PROFILES_ACTIVE="postgres"
+$env:PGHOST="your-neon-host"
+$env:PGDATABASE="OpenSchedulr"
+$env:PGUSER="neondb_owner"
+$env:PGPASSWORD="your-password"
+$env:PGSSLMODE="require"
+$env:PGCHANNELBINDING="require"
+$env:JWT_SECRET="change-me-change-me-change-me-change-me"
+cd backend
+mvn spring-boot:run
+```
 
 ## Run with Docker
 
@@ -257,9 +287,9 @@ It runs:
 
 ### Option 1: Render + Vercel
 
-- Backend on Render free tier using `backend/Dockerfile`
+- Backend on Render free tier using [render.yaml](/d:/Project/OpenSchedulr/render.yaml)
 - PostgreSQL on Neon or Supabase free tier
-- Frontend on Vercel free tier
+- Frontend on Vercel free tier using either the root [vercel.json](/d:/Project/OpenSchedulr/vercel.json) or [frontend/vercel.json](/d:/Project/OpenSchedulr/frontend/vercel.json)
 
 ### Option 2: Full self-hosted Docker
 
@@ -293,3 +323,21 @@ It runs:
 - `docs/ARCHITECTURE.md`
 - `docs/API_FLOW.md`
 - `docs/DEPLOYMENT.md`
+
+## Fastest production-like deployment
+
+1. Create a Neon PostgreSQL database
+2. Deploy backend to Render using [render.yaml](/d:/Project/OpenSchedulr/render.yaml)
+3. Set Render env vars:
+   `SPRING_PROFILES_ACTIVE=postgres`
+   `PGHOST`
+   `PGDATABASE`
+   `PGUSER`
+   `PGPASSWORD`
+   `PGSSLMODE=require`
+   `PGCHANNELBINDING=require`
+   `JWT_SECRET`
+4. Deploy frontend to Vercel
+5. Set Vercel env vars:
+   `VITE_API_BASE_URL=https://<render-backend>/api`
+   `VITE_API_ROOT=https://<render-backend>/api`

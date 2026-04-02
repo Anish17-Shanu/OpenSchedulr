@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/openschedulr}
-    username: ${DB_USERNAME:openschedulr}
-    password: ${DB_PASSWORD:openschedulr}
-    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL:jdbc:postgresql://${PGHOST:localhost}:5432/${PGDATABASE:openschedulr}?sslmode=${PGSSLMODE:disable}&channelBinding=${PGCHANNELBINDING:disable}}
+    username: ${DB_USERNAME:${PGUSER:openschedulr}}
+    password: ${DB_PASSWORD:${PGPASSWORD:openschedulr}}
+    driver-class-name: ${DB_DRIVER:org.postgresql.Driver}
