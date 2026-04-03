@@ -30,3 +30,15 @@ services:
         sync: false
       - key: JWT_SECRET
         generateValue: true
+      - key: APP_SEED_DEMO_ENABLED
+        value: "true"
+      - key: APP_HOSTED_SCHEDULE_ENABLED
+        value: "true"
+      - key: APP_REALTIME_ENABLED
+        value: "false"
+      - key: BOOTSTRAP_ADMIN_ENABLED
+        value: "true"
+      - key: BOOTSTRAP_ADMIN_EMAIL
+        value: admin@openschedulr.dev
+      - key: BOOTSTRAP_ADMIN_PASSWORD
+        value: Admin@123
