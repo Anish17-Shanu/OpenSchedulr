@@ -1,5 +1,5 @@
 /* =========================
- ELITE SAAS UI (PRODUCTION READY)
+ ELITE SAAS UI v2 (MODERN 2026 LEVEL)
 ========================= */
 
 @tailwind base;
@@ -7,11 +7,11 @@
 @tailwind utilities;
 
 :root {
-  --bg: #0b1220;
-  --panel: #111827;
-  --card: #1f2937;
+  --bg: #0a0f1c;
+  --panel: #0f172a;
+  --card: rgba(255,255,255,0.05);
   --accent: #6366f1;
-  --text: #e5e7eb;
+  --text: #e2e8f0;
 }
 
 body {
@@ -20,85 +20,109 @@ body {
   font-family: Inter, system-ui;
 }
 
-/* =========================
- LAYOUT
-========================= */
 .layout {
   display: grid;
   grid-template-columns: 260px 1fr;
   min-height: 100vh;
 }
 
+/* SIDEBAR */
 .sidebar {
-  background: rgba(17,24,39,0.8);
+  background: rgba(15,23,42,0.7);
   backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(255,255,255,0.05);
+  border-right: 1px solid rgba(255,255,255,0.06);
   padding: 20px;
 }
 
 .nav-item {
-  padding: 10px 14px;
-  border-radius: 10px;
-  transition: all 0.2s;
+  padding: 12px;
+  border-radius: 12px;
+  transition: 0.2s;
+  cursor: pointer;
 }
 
 .nav-item:hover {
   background: rgba(99,102,241,0.15);
 }
 
+/* MAIN */
 .main {
   padding: 24px;
 }
 
-/* =========================
- CARDS
-========================= */
+/* CARD */
 .card {
-  background: rgba(31,41,55,0.7);
-  border: 1px solid rgba(255,255,255,0.05);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(16px);
+  border-radius: 18px;
   padding: 20px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.4);
 }
 
-/* =========================
- BUTTON
-========================= */
+/* BUTTON */
 .btn {
   background: linear-gradient(135deg,#6366f1,#8b5cf6);
   padding: 10px 16px;
-  border-radius: 10px;
+  border-radius: 12px;
   font-weight: 600;
   transition: 0.2s;
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(99,102,241,0.4);
 }
 
-/* =========================
- TABLE
-========================= */
+/* INPUT */
+.input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* TABLE */
 .table {
   width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
 }
 
 .table th {
   text-align: left;
-  padding: 10px;
   font-size: 12px;
   opacity: 0.6;
+  padding: 10px;
 }
 
 .table td {
-  padding: 12px 10px;
-  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 14px;
+  background: rgba(255,255,255,0.03);
 }
 
-.table tr:hover {
-  background: rgba(255,255,255,0.03);
+.table tr {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* =========================
+ TIMETABLE GRID (KEY FEATURE)
+========================= */
+.grid-timetable {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.slot {
+  background: rgba(255,255,255,0.05);
+  padding: 10px;
+  border-radius: 12px;
+  min-height: 80px;
+}
+
+.slot:hover {
+  background: rgba(99,102,241,0.2);
 }
 
 /* =========================
@@ -117,20 +141,15 @@ export function DashboardPage() {
           <div className="nav-item">Dashboard</div>
           <div className="nav-item">Faculty</div>
           <div className="nav-item">Rooms</div>
-          <div className="nav-item">Schedule</div>
+          <div className="nav-item">Timetable</div>
         </nav>
-
-        <div className="card text-sm">
-          <p className="opacity-60">Logged in</p>
-          <p className="font-semibold">admin@openschedulr.dev</p>
-        </div>
       </aside>
 
       {/* MAIN */}
       <main className="main space-y-6">
 
         {/* HEADER */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between">
           <h2 className="text-3xl font-bold">Dashboard</h2>
           <div className="flex gap-3">
             <button className="btn">Generate</button>
@@ -140,22 +159,31 @@ export function DashboardPage() {
 
         {/* STATS */}
         <div className="grid grid-cols-4 gap-4">
-          {[
-            {label: "Faculty", value: 42},
-            {label: "Courses", value: 18},
-            {label: "Rooms", value: 12},
-            {label: "Conflicts", value: 2}
-          ].map((item, i) => (
+          {['Faculty','Courses','Rooms','Conflicts'].map((x,i)=> (
             <div key={i} className="card">
-              <p className="text-sm opacity-60">{item.label}</p>
-              <p className="text-2xl font-bold">{item.value}</p>
+              <p className="opacity-60">{x}</p>
+              <p className="text-2xl font-bold">12</p>
             </div>
           ))}
         </div>
 
+        {/* TIMETABLE GRID */}
+        <div className="card">
+          <h3 className="mb-4 font-semibold">Weekly Timetable</h3>
+          <div className="grid-timetable">
+            {[...Array(18)].map((_,i)=> (
+              <div key={i} className="slot">
+                <p className="text-xs opacity-60">Mon 10AM</p>
+                <p className="font-semibold">DSA</p>
+                <p className="text-xs">Room 101</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* TABLE */}
         <div className="card">
-          <h3 className="mb-4 font-semibold">Schedule</h3>
+          <h3 className="mb-4 font-semibold">Detailed Schedule</h3>
           <table className="table">
             <thead>
               <tr>
@@ -170,21 +198,24 @@ export function DashboardPage() {
                 <td>Dr. Sharma</td>
                 <td>DSA</td>
                 <td>R101</td>
-                <td>10:00 AM</td>
+                <td>10:00</td>
               </tr>
               <tr>
                 <td>Prof. Singh</td>
                 <td>OS</td>
                 <td>R202</td>
-                <td>12:00 PM</td>
+                <td>12:00</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        {/* EMPTY STATE */}
-        <div className="card text-center">
-          <p className="opacity-60">No conflicts detected</p>
+        {/* SEARCH + FILTER */}
+        <div className="card flex gap-3">
+          <input className="input" placeholder="Search faculty..." />
+          <select className="input">
+            <option>All Departments</option>
+          </select>
         </div>
 
       </main>
