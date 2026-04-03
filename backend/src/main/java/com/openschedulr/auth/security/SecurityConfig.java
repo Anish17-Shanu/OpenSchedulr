@@ -32,7 +32,9 @@ public class SecurityConfig {
             "/ws/**",
             "/api/ws/**",
             "/actuator/health",
-            "/api/actuator/health"
+            "/api/actuator/health",
+            "/actuator/health/**",
+            "/api/actuator/health/**"
     };
 
     @Bean
