@@ -7,4 +7,7 @@
     <scoreDirectorFactory>
         <constraintProviderClass>com.openschedulr.scheduling.solver.ScheduleConstraintProvider</constraintProviderClass>
     </scoreDirectorFactory>
+    <termination>
+        <spentLimit>10s</spentLimit>
+    </termination>
 </solver>
