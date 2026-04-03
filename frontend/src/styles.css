@@ -6,6 +6,13 @@
   color: #102542;
   background: #f4efe6;
   font-family: "IBM Plex Sans", system-ui, sans-serif;
+  --ink: #102542;
+  --moss: #1f5c4b;
+  --sand: #f4efe6;
+  --ember: #d96c3d;
+  --mist: #dce6e9;
+  --sky: #9fd3dc;
+  --paper: rgba(255, 252, 247, 0.78);
 }
 
 html {
@@ -15,11 +22,29 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  background: linear-gradient(180deg, #f6f1e8, #dce6e9);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(217, 108, 61, 0.18), transparent 24%),
+    radial-gradient(circle at 85% 20%, rgba(159, 211, 220, 0.2), transparent 26%),
+    radial-gradient(circle at 76% 72%, rgba(31, 92, 75, 0.16), transparent 28%),
+    linear-gradient(180deg, #f7f2e8 0%, #eef3f2 52%, #dde7ea 100%);
+  background-attachment: fixed;
 }
 
 * {
   box-sizing: border-box;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(16, 37, 66, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 37, 66, 0.03) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(circle at center, black 48%, transparent 88%);
+  opacity: 0.45;
 }
 
 button {
@@ -32,4 +57,64 @@ button:hover {
 
 ::selection {
   background: rgba(31, 92, 75, 0.18);
+}
+
+.glass-panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 250, 243, 0.62));
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+.aurora-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(14px);
+  opacity: 0.65;
+  animation: drift 11s ease-in-out infinite;
+}
+
+.shimmer-border {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(130deg, rgba(255, 255, 255, 0.85), rgba(159, 211, 220, 0.28), rgba(217, 108, 61, 0.28), rgba(255, 255, 255, 0.7));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.animate-rise {
+  animation: riseIn 560ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.animate-fade-delay {
+  animation: riseIn 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes drift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(12px, -18px, 0) scale(1.08);
+  }
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }

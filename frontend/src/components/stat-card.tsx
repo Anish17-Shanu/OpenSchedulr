@@ -10,14 +10,15 @@ interface StatCardProps {
 
 export function StatCard({ label, value, helper, icon, accent = "from-moss/15 to-white" }: StatCardProps) {
   return (
-    <div className={`rounded-[1.75rem] border border-white/50 bg-gradient-to-br ${accent} p-5 shadow-panel backdrop-blur`}>
+    <div className={`glass-panel shimmer-border animate-rise rounded-[1.75rem] border border-white/55 bg-gradient-to-br ${accent} p-5 shadow-panel`}>
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-medium text-ink/60">{label}</p>
-          <p className="mt-2 text-3xl font-semibold text-ink">{value}</p>
+          <p className="text-sm font-medium uppercase tracking-[0.16em] text-ink/48">{label}</p>
+          <p className="mt-3 text-3xl font-semibold text-ink">{value}</p>
         </div>
-        {icon ? <div className="rounded-2xl bg-white/80 p-3 text-ink shadow-sm">{icon}</div> : null}
+        {icon ? <div className="rounded-2xl bg-[linear-gradient(145deg,rgba(255,255,255,0.95),rgba(220,230,233,0.9))] p-3 text-ink shadow-[0_12px_24px_rgba(16,37,66,0.12)]">{icon}</div> : null}
       </div>
+      <div className="mt-4 h-px bg-gradient-to-r from-ink/10 via-ink/5 to-transparent" />
       <p className="mt-4 text-sm leading-6 text-ink/70">{helper}</p>
     </div>
   );

@@ -151,10 +151,13 @@ export function DashboardPage() {
   const adminBusy = generateMutation.isPending || publishMutation.isPending || rescheduleMutation.isPending;
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(217,108,61,0.12),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(31,92,75,0.18),_transparent_35%),linear-gradient(180deg,#f6f1e8,#dce6e9)] text-ink">
+    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(217,108,61,0.12),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(31,92,75,0.18),_transparent_35%),linear-gradient(180deg,#f6f1e8,#dce6e9)] text-ink">
+      <div className="aurora-orb left-[5%] top-[10%] h-40 w-40 bg-ember/25" />
+      <div className="aurora-orb right-[9%] top-[14%] h-52 w-52 bg-sky-200/50" style={{ animationDelay: "1.2s" }} />
+      <div className="aurora-orb bottom-[12%] right-[14%] h-60 w-60 bg-moss/20" style={{ animationDelay: "2.4s" }} />
       <div className="mx-auto max-w-[1500px] px-4 py-6 md:px-8">
         <div className="grid gap-6 xl:grid-cols-[280px_1fr]">
-          <aside className="rounded-[2rem] border border-white/50 bg-[linear-gradient(165deg,rgba(16,37,66,0.98),rgba(31,92,75,0.88))] p-6 text-white shadow-panel">
+          <aside className="animate-rise rounded-[2rem] border border-white/50 bg-[linear-gradient(165deg,rgba(16,37,66,0.98),rgba(31,92,75,0.88))] p-6 text-white shadow-[0_24px_70px_rgba(16,37,66,0.24)]">
             <div className="flex items-center gap-3">
               <div className="rounded-2xl bg-white/10 p-3">
                 <LayoutDashboard className="h-5 w-5" />
@@ -202,7 +205,7 @@ export function DashboardPage() {
           </aside>
 
           <main className="space-y-6">
-            <section className="rounded-[2rem] border border-white/50 bg-white/78 p-6 shadow-panel backdrop-blur">
+            <section className="glass-panel shimmer-border animate-rise rounded-[2rem] border border-white/50 p-6 shadow-panel">
               <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.28em] text-moss">Campus planning</p>
@@ -210,13 +213,18 @@ export function DashboardPage() {
                   <p className="mt-4 max-w-3xl text-sm leading-7 text-ink/72">
                     Generate draft timetables, rebalance workloads, review conflicts, and publish changes with a planning surface that keeps both operations and faculty communication in one place.
                   </p>
+                  <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-ink/50">
+                    <span className="rounded-full bg-white/75 px-3 py-2 shadow-sm">Studio mode</span>
+                    <span className="rounded-full bg-white/75 px-3 py-2 shadow-sm">Live admin controls</span>
+                    <span className="rounded-full bg-white/75 px-3 py-2 shadow-sm">Publish-ready review</span>
+                  </div>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-3xl border border-moss/10 bg-moss/5 px-4 py-4">
+                  <div className="rounded-3xl border border-moss/10 bg-[linear-gradient(135deg,rgba(31,92,75,0.12),rgba(255,255,255,0.9))] px-4 py-4 shadow-sm">
                     <p className="text-xs uppercase tracking-[0.22em] text-ink/50">Schedule status</p>
                     <p className="mt-2 text-xl font-semibold text-ink">{timetable.length > 0 ? "Draft schedule active" : "Waiting for generation"}</p>
                   </div>
-                  <div className="rounded-3xl border border-ember/10 bg-amber-50 px-4 py-4">
+                  <div className="rounded-3xl border border-ember/10 bg-[linear-gradient(135deg,rgba(217,108,61,0.12),rgba(255,255,255,0.9))] px-4 py-4 shadow-sm">
                     <p className="text-xs uppercase tracking-[0.22em] text-ink/50">Last action</p>
                     <p className="mt-2 text-xl font-semibold text-ink">{adminBusy ? "Processing update" : "Ready for next change"}</p>
                   </div>
@@ -231,7 +239,7 @@ export function DashboardPage() {
               <StatCard label="Conflicts" value={stats?.totalConflicts ?? 0} helper="Warnings are surfaced early before schedule publication." icon={<Activity className="h-5 w-5" />} accent="from-rose-50 to-white" />
             </div>
 
-            <section className="rounded-[1.75rem] border border-white/50 bg-white/88 p-5 shadow-panel">
+            <section className="glass-panel shimmer-border animate-rise rounded-[1.75rem] border border-white/50 p-5 shadow-panel">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-moss">Quick guide</p>

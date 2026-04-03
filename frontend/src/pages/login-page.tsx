@@ -15,9 +15,14 @@ export function LoginPage() {
   });
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top_left,_rgba(217,108,61,0.18),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(31,92,75,0.22),_transparent_30%),linear-gradient(135deg,#f4efe6,#dce6e9)] px-4 py-10">
-      <div className="grid w-full max-w-6xl overflow-hidden rounded-[2rem] border border-white/50 bg-white/75 shadow-panel backdrop-blur lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="bg-[linear-gradient(140deg,rgba(16,37,66,0.97),rgba(31,92,75,0.9))] p-8 text-white md:p-10">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-10">
+      <div className="aurora-orb left-[6%] top-[9%] h-44 w-44 bg-ember/35" />
+      <div className="aurora-orb right-[8%] top-[12%] h-52 w-52 bg-sky-200/55" style={{ animationDelay: "1.3s" }} />
+      <div className="aurora-orb bottom-[10%] left-[20%] h-56 w-56 bg-moss/25" style={{ animationDelay: "2.1s" }} />
+      <div className="grid w-full max-w-6xl overflow-hidden rounded-[2rem] border border-white/50 bg-white/75 shadow-[0_28px_80px_rgba(16,37,66,0.16)] backdrop-blur lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="relative bg-[linear-gradient(140deg,rgba(16,37,66,0.97),rgba(31,92,75,0.9))] p-8 text-white md:p-10">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_22%,rgba(255,255,255,0.12),transparent_24%),radial-gradient(circle_at_80%_0%,rgba(217,108,61,0.28),transparent_28%)]" />
+          <div className="relative animate-rise">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-white/65">OpenSchedulr</p>
           <h1 className="mt-6 max-w-xl text-4xl font-semibold leading-tight">A calmer way to build and adjust faculty schedules.</h1>
           <p className="mt-4 max-w-lg text-sm leading-7 text-white/75">
@@ -38,7 +43,10 @@ export function LoginPage() {
             </div>
           </div>
         </div>
-        <div className="p-8 md:p-10">
+        </div>
+        <div className="glass-panel relative p-8 md:p-10">
+          <div className="absolute right-8 top-8 h-24 w-24 rounded-full bg-[radial-gradient(circle,rgba(217,108,61,0.18),transparent_65%)]" />
+          <div className="animate-fade-delay">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-moss">Sign in</p>
           <h2 className="mt-4 text-3xl font-semibold text-ink">Enter the scheduling workspace</h2>
           <p className="mt-3 text-sm leading-7 text-ink/70">Use the deployment credentials below or replace them with your own once the system is connected to your production database.</p>
@@ -58,6 +66,7 @@ export function LoginPage() {
               <p><span className="font-semibold text-ink">Tip:</span> if Render still has `BOOTSTRAP_ADMIN_PASSWORD` set, that hosted value overrides the built-in project default.</p>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>
