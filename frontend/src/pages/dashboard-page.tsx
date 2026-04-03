@@ -151,265 +151,205 @@ export function DashboardPage() {
   const adminBusy = generateMutation.isPending || publishMutation.isPending || rescheduleMutation.isPending;
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(217,108,61,0.12),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(31,92,75,0.18),_transparent_35%),linear-gradient(180deg,#f6f1e8,#dce6e9)] text-ink">
-      <div className="aurora-orb left-[5%] top-[10%] h-40 w-40 bg-ember/25" />
-      <div className="aurora-orb right-[9%] top-[14%] h-52 w-52 bg-sky-200/50" style={{ animationDelay: "1.2s" }} />
-      <div className="aurora-orb bottom-[12%] right-[14%] h-60 w-60 bg-moss/20" style={{ animationDelay: "2.4s" }} />
-      <div className="mx-auto max-w-[1500px] px-4 py-6 md:px-8">
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-[1.5rem] border border-white/50 bg-white/60 px-4 py-3 shadow-[0_12px_30px_rgba(16,37,66,0.08)] backdrop-blur">
-          <div className="flex flex-wrap items-center gap-3 text-sm text-ink/72">
-            <span className="section-kicker">Modern scheduling workspace</span>
-            <span className="rounded-full bg-ink/5 px-3 py-2 font-medium">Faculty planning</span>
-            <span className="rounded-full bg-ink/5 px-3 py-2 font-medium">Realtime review</span>
-          </div>
-          <div className="flex items-center gap-3 text-sm text-ink/65">
-            <span className="rounded-full bg-[linear-gradient(135deg,rgba(31,92,75,0.12),rgba(255,255,255,0.9))] px-3 py-2 font-medium">{timetable.length} sessions loaded</span>
-            <span className="rounded-full bg-[linear-gradient(135deg,rgba(217,108,61,0.12),rgba(255,255,255,0.9))] px-3 py-2 font-medium">{conflicts.length} conflict markers</span>
-          </div>
+  <div className="relative min-h-screen overflow-hidden bg-[#05070f] text-white">
+
+    {/* BACKGROUND GLOW + NOISE */}
+    <div className="pointer-events-none absolute inset-0">
+      <div className="absolute left-[10%] top-[10%] h-72 w-72 bg-indigo-500/20 blur-[140px] rounded-full animate-pulse" />
+      <div className="absolute right-[10%] bottom-[10%] h-80 w-80 bg-emerald-500/20 blur-[160px] rounded-full animate-pulse" />
+    </div>
+
+    <div className="relative mx-auto max-w-[1600px] px-6 py-8 space-y-8">
+
+      {/* TOP BAR */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+
+        <div className="flex items-center gap-3 text-sm text-white/70">
+          <span className="uppercase tracking-widest text-xs text-white/40">Workspace</span>
+          <span className="px-3 py-1 rounded-full bg-white/10">Realtime</span>
+          <span className="px-3 py-1 rounded-full bg-white/10">Scheduler</span>
         </div>
-        <div className="grid gap-6 xl:grid-cols-[300px_1fr]">
-          <aside className="animate-rise rounded-[2rem] border border-white/50 bg-[linear-gradient(165deg,rgba(16,37,66,0.98),rgba(31,92,75,0.88))] p-6 text-white shadow-[0_24px_70px_rgba(16,37,66,0.24)]">
-            <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-white/10 p-3">
-                <LayoutDashboard className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-white/65">OpenSchedulr</p>
-                <p className="mt-1 text-lg font-semibold">Operations Console</p>
-              </div>
-            </div>
 
-            <div className="mt-6 rounded-[1.75rem] border border-white/12 bg-white/8 p-4">
-              <p className="text-xs uppercase tracking-[0.24em] text-white/55">Control stance</p>
-              <p className="mt-3 text-2xl font-semibold">Studio mode</p>
-              <p className="mt-2 text-sm leading-6 text-white/70">A richer review flow for generation, conflict triage, manual overrides, and publication.</p>
-            </div>
+        <div className="flex items-center gap-3 text-sm">
+          <span className="text-white/50">{email}</span>
 
-            <div className="mt-8 rounded-[1.75rem] border border-white/10 bg-white/10 p-5">
-              <p className="text-xs uppercase tracking-[0.24em] text-white/60">Signed in</p>
-              <p className="mt-3 break-all text-lg font-semibold">{email}</p>
-              <p className="mt-1 text-sm text-white/70">{role === "ADMIN" ? "Administrator" : "Faculty member"}</p>
-            </div>
+          {role === "ADMIN" && (
+            <>
+              <Button
+                onClick={() => generateMutation.mutate()}
+                className="transition hover:scale-[1.05] active:scale-[0.95]"
+              >
+                <RefreshCw className={`mr-2 h-4 w-4 ${generateMutation.isPending ? "animate-spin" : ""}`} />
+                Generate
+              </Button>
 
-            <div className="mt-6 space-y-3">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-xs uppercase tracking-[0.24em] text-white/55">Planner health</p>
-                <p className="mt-2 text-2xl font-semibold">{conflicts.length === 0 ? "Stable" : "Review needed"}</p>
-                <p className="mt-2 text-sm text-white/70">{conflicts.length === 0 ? "No critical conflicts detected right now." : `${conflicts.length} conflict${conflicts.length === 1 ? "" : "s"} still need attention.`}</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-xs uppercase tracking-[0.24em] text-white/55">Realtime updates</p>
-                <p className="mt-2 text-2xl font-semibold">{notifications.length}</p>
-                <p className="mt-2 text-sm text-white/70">Recent planner and faculty notification events.</p>
-              </div>
-            </div>
+              <Button
+                variant="outline"
+                onClick={() => publishMutation.mutate()}
+                className="transition hover:scale-[1.05] active:scale-[0.95]"
+              >
+                <Send className="mr-2 h-4 w-4" />
+                Publish
+              </Button>
+            </>
+          )}
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              {role === "ADMIN" ? (
-                <>
-                  <Button variant="secondary" className="w-full justify-center" onClick={() => generateMutation.mutate()} disabled={adminBusy}>
-                    <RefreshCw className={`mr-2 inline h-4 w-4 ${generateMutation.isPending ? "animate-spin" : ""}`} />
-                    {generateMutation.isPending ? "Generating..." : "Generate timetable"}
-                  </Button>
-                  <Button variant="outline" className="w-full justify-center border-white/20 text-white" onClick={() => publishMutation.mutate()} disabled={adminBusy}>
-                    <Send className="mr-2 inline h-4 w-4" />
-                    {publishMutation.isPending ? "Publishing..." : "Publish"}
-                  </Button>
-                </>
-              ) : null}
-              <Button variant="outline" className="w-full justify-center border-white/20 text-white" onClick={logout}>Logout</Button>
-            </div>
-          </aside>
-
-          <main className="space-y-6">
-            <section className="mesh-card shimmer-border animate-rise overflow-hidden rounded-[2rem] border border-white/50 p-6 shadow-panel">
-              <div className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
-                <div>
-                  <div className="section-kicker">Campus planning</div>
-                  <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight text-ink md:text-5xl">A clearer weekly view for faculty scheduling.</h1>
-                  <p className="mt-4 max-w-3xl text-sm leading-7 text-ink/72">
-                    Generate draft timetables, rebalance workloads, review conflicts, and publish changes with a planning surface that keeps both operations and faculty communication in one place.
-                  </p>
-                  <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-ink/50">
-                    <span className="rounded-full bg-white/75 px-3 py-2 shadow-sm">Studio mode</span>
-                    <span className="rounded-full bg-white/75 px-3 py-2 shadow-sm">Live admin controls</span>
-                    <span className="rounded-full bg-white/75 px-3 py-2 shadow-sm">Publish-ready review</span>
-                  </div>
-                  <div className="mt-8 grid gap-4 md:grid-cols-3">
-                    <div className="hero-metric rounded-[1.5rem] border border-white/65 bg-white/74 p-4 shadow-[0_16px_34px_rgba(16,37,66,0.08)]">
-                      <p className="text-xs uppercase tracking-[0.22em] text-ink/46">Generator</p>
-                      <p className="mt-3 text-2xl font-semibold text-ink">{adminBusy ? "Working now" : "Ready"}</p>
-                      <p className="mt-2 text-sm text-ink/66">Draft generation and publication controls stay in the same decision loop.</p>
-                    </div>
-                    <div className="hero-metric rounded-[1.5rem] border border-white/65 bg-white/74 p-4 shadow-[0_16px_34px_rgba(16,37,66,0.08)]">
-                      <p className="text-xs uppercase tracking-[0.22em] text-ink/46">Review</p>
-                      <p className="mt-3 text-2xl font-semibold text-ink">{timetable.length > 0 ? "Schedule loaded" : "Waiting"}</p>
-                      <p className="mt-2 text-sm text-ink/66">Sort by faculty, room, section, batch, department, or program.</p>
-                    </div>
-                    <div className="hero-metric rounded-[1.5rem] border border-white/65 bg-white/74 p-4 shadow-[0_16px_34px_rgba(16,37,66,0.08)]">
-                      <p className="text-xs uppercase tracking-[0.22em] text-ink/46">Collaboration</p>
-                      <p className="mt-3 text-2xl font-semibold text-ink">{notifications.length} signals</p>
-                      <p className="mt-2 text-sm text-ink/66">Realtime updates and audit history keep changes visible across the team.</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="grid gap-4">
-                  <div className="soft-ring rounded-[1.75rem] border border-white/65 bg-[linear-gradient(145deg,rgba(31,92,75,0.12),rgba(255,255,255,0.92))] p-5">
-                    <p className="text-xs uppercase tracking-[0.22em] text-ink/50">Schedule status</p>
-                    <p className="mt-3 text-2xl font-semibold text-ink">{timetable.length > 0 ? "Draft schedule active" : "Waiting for generation"}</p>
-                    <p className="mt-3 text-sm leading-6 text-ink/68">Use generate to assemble a draft, then refine with drag-and-drop before publishing.</p>
-                  </div>
-                  <div className="soft-ring rounded-[1.75rem] border border-white/65 bg-[linear-gradient(145deg,rgba(217,108,61,0.12),rgba(255,255,255,0.92))] p-5">
-                    <p className="text-xs uppercase tracking-[0.22em] text-ink/50">Last action</p>
-                    <p className="mt-3 text-2xl font-semibold text-ink">{adminBusy ? "Processing update" : "Ready for next change"}</p>
-                    <p className="mt-3 text-sm leading-6 text-ink/68">This workspace is designed to keep setup, review, and publication in one rhythm.</p>
-                  </div>
-                  <div className="rounded-[1.75rem] border border-ink/8 bg-[linear-gradient(135deg,rgba(16,37,66,0.95),rgba(31,92,75,0.82))] p-5 text-white shadow-[0_22px_45px_rgba(16,37,66,0.18)]">
-                    <p className="text-xs uppercase tracking-[0.22em] text-white/55">Experience goal</p>
-                    <p className="mt-3 text-xl font-semibold">Modern control room, not plain CRUD.</p>
-                    <p className="mt-3 text-sm leading-6 text-white/72">The scheduling surface now leans into layered cards, clearer hierarchy, and more motion so the app feels closer to a polished product.</p>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
-              <StatCard label="Faculty" value={facultyQuery.data?.length ?? 0} helper="Availability, preferences, and load caps are actively tracked." icon={<Users className="h-5 w-5" />} accent="from-moss/10 to-white" />
-              <StatCard label="Courses" value={coursesQuery.data?.length ?? 0} helper="Courses are tied to room types and cohort requirements." icon={<GraduationCap className="h-5 w-5" />} accent="from-amber-50 to-white" />
-              <StatCard label="Sessions" value={stats?.totalEntries ?? 0} helper="Draft and published timetable sessions currently in the planner." icon={<CalendarClock className="h-5 w-5" />} accent="from-sky-50 to-white" />
-              <StatCard label="Conflicts" value={stats?.totalConflicts ?? 0} helper="Warnings are surfaced early before schedule publication." icon={<Activity className="h-5 w-5" />} accent="from-rose-50 to-white" />
-            </div>
-
-            <section className="glass-panel shimmer-border animate-rise rounded-[1.75rem] border border-white/50 p-5 shadow-panel">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-moss">Quick guide</p>
-                  <h2 className="mt-2 text-2xl font-semibold text-ink">Best workflow for publishing a clean timetable</h2>
-                </div>
-                <div className="rounded-full bg-ink/5 px-4 py-2 text-sm font-medium text-ink/70">
-                  {role === "ADMIN" ? "Admin workflow" : "Faculty overview"}
-                </div>
-              </div>
-              <div className="mt-5 grid gap-3 lg:grid-cols-4">
-                <div className="rounded-2xl border border-ink/8 bg-mist/35 p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Step 1</p>
-                  <p className="mt-2 font-semibold text-ink">Generate</p>
-                  <p className="mt-2 text-sm leading-6 text-ink/70">Run the solver to create a draft schedule from current teaching demand.</p>
-                </div>
-                <div className="rounded-2xl border border-ink/8 bg-sand/60 p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Step 2</p>
-                  <p className="mt-2 font-semibold text-ink">Review</p>
-                  <p className="mt-2 text-sm leading-6 text-ink/70">Inspect conflicts, workload distribution, and room allocation patterns.</p>
-                </div>
-                <div className="rounded-2xl border border-ink/8 bg-amber-50 p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Step 3</p>
-                  <p className="mt-2 font-semibold text-ink">Adjust</p>
-                  <p className="mt-2 text-sm leading-6 text-ink/70">Drag any lecture to a new slot to apply a quick manual override.</p>
-                </div>
-                <div className="rounded-2xl border border-ink/8 bg-white p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Step 4</p>
-                  <p className="mt-2 font-semibold text-ink">Publish</p>
-                  <p className="mt-2 text-sm leading-6 text-ink/70">Lock the timetable and notify faculty once the week looks stable.</p>
-                </div>
-              </div>
-            </section>
-
-            {role === "ADMIN" ? (
-              <AdminSetupPanel
-                counts={{
-                  faculty: facultyQuery.data?.length ?? 0,
-                  courses: coursesQuery.data?.length ?? 0,
-                  rooms: roomsQuery.data?.length ?? 0,
-                  timeSlots: timeSlotsQuery.data?.length ?? 0,
-                  demands: demandsQuery.data?.length ?? 0
-                }}
-                faculty={facultyQuery.data ?? []}
-                courses={coursesQuery.data ?? []}
-                rooms={roomsQuery.data ?? []}
-                timeSlots={timeSlotsQuery.data ?? []}
-                demands={demandsQuery.data ?? []}
-                auditLogs={auditLogsQuery.data ?? []}
-                onCreateFaculty={createFacultyMutation.mutateAsync}
-                onUpdateFaculty={(facultyId, payload) => updateFacultyMutation.mutateAsync({ facultyId, payload })}
-                onCreateCourse={createCourseMutation.mutateAsync}
-                onUpdateCourse={(courseId, payload) => updateCourseMutation.mutateAsync({ courseId, payload })}
-                onCreateRoom={createRoomMutation.mutateAsync}
-                onUpdateRoom={(roomId, payload) => updateRoomMutation.mutateAsync({ roomId, payload })}
-                onCreateTimeSlot={createTimeSlotMutation.mutateAsync}
-                onUpdateTimeSlot={(timeSlotId, payload) => updateTimeSlotMutation.mutateAsync({ timeSlotId, payload })}
-                onCreateDemand={createDemandMutation.mutateAsync}
-                onUpdateDemand={(demandId, payload) => updateDemandMutation.mutateAsync({ demandId, payload })}
-                onDeleteFaculty={deleteFacultyMutation.mutateAsync}
-                onDeleteCourse={deleteCourseMutation.mutateAsync}
-                onDeleteRoom={deleteRoomMutation.mutateAsync}
-                onDeleteTimeSlot={deleteTimeSlotMutation.mutateAsync}
-                onDeleteDemand={deleteDemandMutation.mutateAsync}
-              />
-            ) : null}
-
-            <div className="grid gap-6 2xl:grid-cols-[1.8fr_1fr]">
-              <div className="space-y-6">
-                <TimetableBoard
-                  timetable={timetable}
-                  timeSlots={timeSlotsQuery.data ?? []}
-                  rooms={roomsQuery.data ?? []}
-                  onDrop={(entryId, roomId, timeSlotId) => role === "ADMIN" && rescheduleMutation.mutate({ entryId, roomId, timeSlotId })}
-                />
-
-                <div className="grid gap-4 xl:grid-cols-2">
-                  <div className="mesh-card rounded-[1.75rem] border border-white/50 p-5 shadow-panel">
-                    <div className="flex items-center gap-3">
-                      <ChartColumn className="h-5 w-5 text-moss" />
-                      <div>
-                        <h3 className="text-lg font-semibold">Workload Balance</h3>
-                        <p className="text-sm text-ink/65">Quick scan of teaching distribution across faculty.</p>
-                      </div>
-                    </div>
-                    <div className="mt-5 space-y-3">
-                      {workload.map(([name, count]) => (
-                        <div key={name}>
-                          <div className="mb-2 flex items-center justify-between text-sm text-ink/75">
-                            <span>{name}</span>
-                            <span className="font-semibold">{count} sessions</span>
-                          </div>
-                          <div className="h-3 overflow-hidden rounded-full bg-mist/70">
-                            <div className="h-full rounded-full bg-[linear-gradient(90deg,#1f5c4b,#102542)]" style={{ width: `${Math.min(Number(count) * 20, 100)}%` }} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mesh-card rounded-[1.75rem] border border-white/50 p-5 shadow-panel">
-                    <div className="flex items-center gap-3">
-                      <BellRing className="h-5 w-5 text-ember" />
-                      <div>
-                        <h3 className="text-lg font-semibold">Room Utilization</h3>
-                        <p className="text-sm text-ink/65">Identify busy spaces and underused teaching rooms.</p>
-                      </div>
-                    </div>
-                    <div className="mt-5 space-y-3">
-                      {roomUtilization.map(([room, count]) => (
-                        <div key={room} className="rounded-2xl border border-ink/6 bg-sand/60 px-4 py-3">
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-ink">{room}</span>
-                            <span className="text-sm font-semibold text-ink/80">{count} sessions</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                <ConflictPanel conflicts={conflicts} />
-                <NotificationPanel notifications={notifications} />
-              </div>
-            </div>
-          </main>
+          <Button
+            variant="outline"
+            onClick={logout}
+            className="transition hover:scale-[1.05] active:scale-[0.95]"
+          >
+            Logout
+          </Button>
         </div>
       </div>
+
+      {/* GRID */}
+      <div className="grid gap-8 xl:grid-cols-[320px_1fr]">
+
+        {/* SIDEBAR */}
+        <aside className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-[#0b1220] to-[#020617] p-6 shadow-[0_30px_100px_rgba(0,0,0,0.6)] space-y-6">
+
+          <div>
+            <p className="text-xs uppercase text-white/40 tracking-widest">OpenSchedulr</p>
+            <h2 className="text-2xl font-semibold mt-2">Studio Mode</h2>
+          </div>
+
+          <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+            <p className="text-xs text-white/50">User</p>
+            <p className="font-semibold">{email}</p>
+            <p className="text-sm text-white/50">{role}</p>
+          </div>
+
+          <div className="grid gap-3">
+            <div className="bg-white/5 p-4 rounded-xl">
+              <p className="text-xs text-white/50">Conflicts</p>
+              <p className="text-2xl font-bold">{conflicts.length}</p>
+            </div>
+
+            <div className="bg-white/5 p-4 rounded-xl">
+              <p className="text-xs text-white/50">Notifications</p>
+              <p className="text-2xl font-bold">{notifications.length}</p>
+            </div>
+          </div>
+
+        </aside>
+
+        {/* MAIN */}
+        <main className="space-y-8">
+
+          {/* HERO */}
+          <section className="rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-8 shadow-[0_30px_100px_rgba(0,0,0,0.6)]">
+
+            <h1 className="text-5xl font-semibold tracking-tight">
+              A modern scheduling control room.
+            </h1>
+
+            <p className="mt-4 text-white/60 max-w-2xl">
+              Generate, refine, and publish faculty schedules with clarity, speed, and full control.
+            </p>
+
+            <div className="grid gap-4 mt-6 md:grid-cols-3">
+              <StatCard label="Faculty" value={facultyQuery.data?.length ?? 0} icon={<Users />} />
+              <StatCard label="Courses" value={coursesQuery.data?.length ?? 0} icon={<GraduationCap />} />
+              <StatCard label="Sessions" value={stats?.totalEntries ?? 0} icon={<CalendarClock />} />
+            </div>
+
+          </section>
+
+          {/* TIMETABLE */}
+          <div className="rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-6 shadow-xl">
+            <TimetableBoard
+              timetable={timetable}
+              timeSlots={timeSlotsQuery.data ?? []}
+              rooms={roomsQuery.data ?? []}
+              onDrop={(entryId, roomId, timeSlotId) =>
+                role === "ADMIN" &&
+                rescheduleMutation.mutate({ entryId, roomId, timeSlotId })
+              }
+            />
+          </div>
+
+          {/* ANALYTICS */}
+          <div className="grid gap-6 md:grid-cols-2">
+
+            <div className="rounded-2xl bg-white/5 border border-white/10 p-6">
+              <h3 className="mb-4 font-semibold">Workload</h3>
+
+              {workload.map(([name, count]) => (
+                <div key={name} className="mb-3">
+                  <div className="flex justify-between text-sm text-white/70">
+                    <span>{name}</span>
+                    <span>{count}</span>
+                  </div>
+
+                  <div className="h-2 bg-white/10 rounded-full mt-1">
+                    <div
+                      className="h-full bg-indigo-500 rounded-full"
+                      style={{ width: `${Math.min(Number(count) * 20, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+
+            </div>
+
+            <div className="rounded-2xl bg-white/5 border border-white/10 p-6">
+              <h3 className="mb-4 font-semibold">Room Usage</h3>
+
+              {roomUtilization.map(([room, count]) => (
+                <div key={room} className="flex justify-between text-sm py-1 text-white/70">
+                  <span>{room}</span>
+                  <span>{count}</span>
+                </div>
+              ))}
+
+            </div>
+
+          </div>
+
+          {/* PANELS */}
+          <div className="grid gap-6 xl:grid-cols-[1.8fr_1fr]">
+            <ConflictPanel conflicts={conflicts} />
+            <NotificationPanel notifications={notifications} />
+          </div>
+
+          {/* ADMIN */}
+          {role === "ADMIN" && (
+            <AdminSetupPanel
+              counts={{
+                faculty: facultyQuery.data?.length ?? 0,
+                courses: coursesQuery.data?.length ?? 0,
+                rooms: roomsQuery.data?.length ?? 0,
+                timeSlots: timeSlotsQuery.data?.length ?? 0,
+                demands: demandsQuery.data?.length ?? 0
+              }}
+              faculty={facultyQuery.data ?? []}
+              courses={coursesQuery.data ?? []}
+              rooms={roomsQuery.data ?? []}
+              timeSlots={timeSlotsQuery.data ?? []}
+              demands={demandsQuery.data ?? []}
+              auditLogs={auditLogsQuery.data ?? []}
+              onCreateFaculty={createFacultyMutation.mutateAsync}
+              onUpdateFaculty={(id, payload) => updateFacultyMutation.mutateAsync({ facultyId: id, payload })}
+              onCreateCourse={createCourseMutation.mutateAsync}
+              onUpdateCourse={(id, payload) => updateCourseMutation.mutateAsync({ courseId: id, payload })}
+              onCreateRoom={createRoomMutation.mutateAsync}
+              onUpdateRoom={(id, payload) => updateRoomMutation.mutateAsync({ roomId: id, payload })}
+              onCreateTimeSlot={createTimeSlotMutation.mutateAsync}
+              onUpdateTimeSlot={(id, payload) => updateTimeSlotMutation.mutateAsync({ timeSlotId: id, payload })}
+              onCreateDemand={createDemandMutation.mutateAsync}
+              onUpdateDemand={(id, payload) => updateDemandMutation.mutateAsync({ demandId: id, payload })}
+              onDeleteFaculty={deleteFacultyMutation.mutateAsync}
+              onDeleteCourse={deleteCourseMutation.mutateAsync}
+              onDeleteRoom={deleteRoomMutation.mutateAsync}
+              onDeleteTimeSlot={deleteTimeSlotMutation.mutateAsync}
+              onDeleteDemand={deleteDemandMutation.mutateAsync}
+            />
+          )}
+
+        </main>
+      </div>
     </div>
-  );
-}
+  </div>
+);

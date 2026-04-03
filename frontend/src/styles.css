@@ -1,225 +1,203 @@
-/* =========================
- ELITE SAAS UI v2 (MODERN 2026 LEVEL)
-========================= */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* =========================
+DESIGN TOKENS (UPGRADED)
+========================= */
 :root {
-  --bg: #0a0f1c;
-  --panel: #0f172a;
-  --card: rgba(255,255,255,0.05);
-  --accent: #6366f1;
-  --text: #e2e8f0;
+--bg-primary: #05070f;
+--bg-secondary: #0b1220;
+
+--surface: rgba(255,255,255,0.06);
+--surface-strong: rgba(255,255,255,0.12);
+--surface-hover: rgba(255,255,255,0.09);
+
+--text-primary: #f8fafc;
+--text-secondary: #94a3b8;
+
+--accent: #6366f1;
+--accent-2: #22c55e;
+--danger: #ef4444;
+
+--border: rgba(255,255,255,0.08);
+
+--radius: 16px;
+
+--shadow-sm: 0 4px 20px rgba(0,0,0,0.25);
+--shadow-md: 0 10px 40px rgba(0,0,0,0.35);
+--shadow-lg: 0 30px 80px rgba(0,0,0,0.5);
+}
+
+/* =========================
+BASE
+========================= */
+html {
+scroll-behavior: smooth;
 }
 
 body {
-  background: radial-gradient(circle at 20% 20%, #1e293b, #020617);
-  color: var(--text);
-  font-family: Inter, system-ui;
+margin: 0;
+background:
+radial-gradient(circle at 20% 20%, rgba(99,102,241,0.15), transparent 30%),
+radial-gradient(circle at 80% 10%, rgba(34,197,94,0.12), transparent 30%),
+radial-gradient(circle at 70% 80%, rgba(239,68,68,0.10), transparent 30%),
+var(--bg-primary);
+color: var(--text-primary);
+font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.layout {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  min-height: 100vh;
+/* NOISE TEXTURE */
+body::after {
+content: "";
+position: fixed;
+inset: 0;
+pointer-events: none;
+background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+opacity: 0.3;
 }
 
-/* SIDEBAR */
-.sidebar {
-  background: rgba(15,23,42,0.7);
-  backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(255,255,255,0.06);
-  padding: 20px;
+/* =========================
+GLASS (UPGRADED)
+========================= */
+.glass {
+background: var(--surface);
+backdrop-filter: blur(20px);
+border: 1px solid var(--border);
+border-radius: var(--radius);
+box-shadow: var(--shadow-md);
+transition: 0.3s;
 }
 
-.nav-item {
-  padding: 12px;
-  border-radius: 12px;
-  transition: 0.2s;
-  cursor: pointer;
+.glass:hover {
+background: var(--surface-hover);
+transform: translateY(-3px);
 }
 
-.nav-item:hover {
-  background: rgba(99,102,241,0.15);
-}
-
-/* MAIN */
-.main {
-  padding: 24px;
-}
-
-/* CARD */
+/* =========================
+CARDS (PREMIUM)
+========================= */
 .card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(16px);
-  border-radius: 18px;
-  padding: 20px;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+position: relative;
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 20px;
+padding: 20px;
+box-shadow: var(--shadow-md);
+transition: all 0.3s ease;
 }
 
-/* BUTTON */
+.card:hover {
+transform: translateY(-6px) scale(1.01);
+box-shadow: var(--shadow-lg);
+}
+
+/* REFLECTION EFFECT */
+.card::after {
+content: "";
+position: absolute;
+inset: 0;
+background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.15), transparent 60%);
+opacity: 0;
+transition: 0.3s;
+}
+
+.card:hover::after {
+opacity: 1;
+}
+
+/* =========================
+BUTTONS (MAGNETIC PRO)
+========================= */
 .btn {
-  background: linear-gradient(135deg,#6366f1,#8b5cf6);
-  padding: 10px 16px;
-  border-radius: 12px;
-  font-weight: 600;
-  transition: 0.2s;
+padding: 12px 22px;
+border-radius: 999px;
+font-weight: 500;
+transition: all 0.2s ease;
+}
+
+.btn-primary {
+background: linear-gradient(135deg,#6366f1,#8b5cf6);
+box-shadow: 0 10px 30px rgba(99,102,241,0.4);
 }
 
 .btn:hover {
-  transform: translateY(-2px);
+transform: translateY(-2px) scale(1.05);
 }
 
-/* INPUT */
-.input {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  padding: 10px;
-  border-radius: 10px;
-}
-
-/* TABLE */
-.table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 10px;
-}
-
-.table th {
-  text-align: left;
-  font-size: 12px;
-  opacity: 0.6;
-  padding: 10px;
-}
-
-.table td {
-  padding: 14px;
-  background: rgba(255,255,255,0.03);
-}
-
-.table tr {
-  border-radius: 12px;
-  overflow: hidden;
+.btn:active {
+transform: scale(0.95);
 }
 
 /* =========================
- TIMETABLE GRID (KEY FEATURE)
+INPUT (FOCUS UPGRADE)
 ========================= */
-.grid-timetable {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
+.input {
+padding: 12px;
+border-radius: 12px;
+background: rgba(255,255,255,0.05);
+border: 1px solid var(--border);
+color: white;
 }
 
+.input:focus {
+outline: none;
+box-shadow:
+0 0 0 2px rgba(99,102,241,0.4),
+0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* =========================
+TABLE (BETTER HOVER)
+========================= */
+.table tr:hover td {
+background: rgba(99,102,241,0.2);
+transform: scale(1.01);
+}
+
+/* =========================
+TIMETABLE (INTERACTIVE)
+========================= */
 .slot {
-  background: rgba(255,255,255,0.05);
-  padding: 10px;
-  border-radius: 12px;
-  min-height: 80px;
+transition: 0.2s;
 }
 
 .slot:hover {
-  background: rgba(99,102,241,0.2);
+transform: scale(1.05);
+background: rgba(99,102,241,0.25);
 }
 
 /* =========================
- DASHBOARD PAGE
+ANIMATIONS (NEW)
 ========================= */
 
-export function DashboardPage() {
-  return (
-    <div className="layout">
+/* Fade + rise */
+.fade-in {
+animation: fadeIn 0.6s ease forwards;
+}
 
-      {/* SIDEBAR */}
-      <aside className="sidebar space-y-6">
-        <h1 className="text-xl font-bold">OpenSchedulr</h1>
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
 
-        <nav className="space-y-2">
-          <div className="nav-item">Dashboard</div>
-          <div className="nav-item">Faculty</div>
-          <div className="nav-item">Rooms</div>
-          <div className="nav-item">Timetable</div>
-        </nav>
-      </aside>
+/* Smooth float */
+.float {
+animation: float 6s ease-in-out infinite;
+}
 
-      {/* MAIN */}
-      <main className="main space-y-6">
+@keyframes float {
+0%,100% { transform: translateY(0); }
+50% { transform: translateY(-10px); }
+}
 
-        {/* HEADER */}
-        <div className="flex justify-between">
-          <h2 className="text-3xl font-bold">Dashboard</h2>
-          <div className="flex gap-3">
-            <button className="btn">Generate</button>
-            <button className="btn">Publish</button>
-          </div>
-        </div>
+/* Gradient shimmer */
+.shimmer {
+background-size: 200% 200%;
+animation: shimmer 6s linear infinite;
+}
 
-        {/* STATS */}
-        <div className="grid grid-cols-4 gap-4">
-          {['Faculty','Courses','Rooms','Conflicts'].map((x,i)=> (
-            <div key={i} className="card">
-              <p className="opacity-60">{x}</p>
-              <p className="text-2xl font-bold">12</p>
-            </div>
-          ))}
-        </div>
-
-        {/* TIMETABLE GRID */}
-        <div className="card">
-          <h3 className="mb-4 font-semibold">Weekly Timetable</h3>
-          <div className="grid-timetable">
-            {[...Array(18)].map((_,i)=> (
-              <div key={i} className="slot">
-                <p className="text-xs opacity-60">Mon 10AM</p>
-                <p className="font-semibold">DSA</p>
-                <p className="text-xs">Room 101</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* TABLE */}
-        <div className="card">
-          <h3 className="mb-4 font-semibold">Detailed Schedule</h3>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Faculty</th>
-                <th>Course</th>
-                <th>Room</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Dr. Sharma</td>
-                <td>DSA</td>
-                <td>R101</td>
-                <td>10:00</td>
-              </tr>
-              <tr>
-                <td>Prof. Singh</td>
-                <td>OS</td>
-                <td>R202</td>
-                <td>12:00</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* SEARCH + FILTER */}
-        <div className="card flex gap-3">
-          <input className="input" placeholder="Search faculty..." />
-          <select className="input">
-            <option>All Departments</option>
-          </select>
-        </div>
-
-      </main>
-
-    </div>
-  );
+@keyframes shimmer {
+0% { background-position: 0% }
+100% { background-position: 200% }
 }
