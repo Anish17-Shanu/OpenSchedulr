@@ -62,6 +62,7 @@ GLASS (UPGRADED)
 ========================= */
 .glass {
 background: var(--surface);
+-webkit-backdrop-filter: blur(20px);
 backdrop-filter: blur(20px);
 border: 1px solid var(--border);
 border-radius: var(--radius);

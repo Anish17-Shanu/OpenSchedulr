@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  Activity,
-  BellRing,
   CalendarClock,
-  ChartColumn,
   GraduationCap,
-  LayoutDashboard,
   RefreshCw,
   Send,
   Users
@@ -148,7 +144,6 @@ export function DashboardPage() {
   const notifications = [...liveNotifications, ...(notificationsQuery.data ?? [])].slice(0, 10);
   const roomUtilization = Object.entries(stats?.roomUtilization ?? {});
   const workload = Object.entries(stats?.workloadDistribution ?? {});
-  const adminBusy = generateMutation.isPending || publishMutation.isPending || rescheduleMutation.isPending;
 
   return (
   <div className="relative min-h-screen overflow-hidden bg-[#05070f] text-white">
@@ -250,9 +245,9 @@ export function DashboardPage() {
             </p>
 
             <div className="grid gap-4 mt-6 md:grid-cols-3">
-              <StatCard label="Faculty" value={facultyQuery.data?.length ?? 0} icon={<Users />} />
-              <StatCard label="Courses" value={coursesQuery.data?.length ?? 0} icon={<GraduationCap />} />
-              <StatCard label="Sessions" value={stats?.totalEntries ?? 0} icon={<CalendarClock />} />
+              <StatCard label="Faculty" value={facultyQuery.data?.length ?? 0} icon={<Users />} helper="Active faculty members" />
+              <StatCard label="Courses" value={coursesQuery.data?.length ?? 0} icon={<GraduationCap />} helper="Total courses" />
+              <StatCard label="Sessions" value={stats?.totalEntries ?? 0} icon={<CalendarClock />} helper="Scheduled sessions" />
             </div>
 
           </section>
@@ -285,8 +280,7 @@ export function DashboardPage() {
 
                   <div className="h-2 bg-white/10 rounded-full mt-1">
                     <div
-                      className="h-full bg-indigo-500 rounded-full"
-                      style={{ width: `${Math.min(Number(count) * 20, 100)}%` }}
+                      className="h-full bg-indigo-500 rounded-full transition-all"
                     />
                   </div>
                 </div>
@@ -352,4 +346,4 @@ export function DashboardPage() {
       </div>
     </div>
   </div>
-);
+)};
