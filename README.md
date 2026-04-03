@@ -22,6 +22,7 @@ Project documentation reference: Anish-Kumar.
 - Supports manual admin rescheduling from the UI
 - Pushes in-app notifications in real time
 - Seeds demo data for immediate local testing
+- Publishes a visible demo timetable automatically on a fresh hosted PostgreSQL deployment
 
 ## Repository layout
 
@@ -337,7 +338,8 @@ It runs:
    `PGSSLMODE=require`
    `PGCHANNELBINDING=require`
    `JWT_SECRET`
-   `APP_SEED_DEMO_ENABLED=false`
+   `APP_SEED_DEMO_ENABLED=true`
+   `APP_HOSTED_SCHEDULE_ENABLED=true`
    `APP_REALTIME_ENABLED=false`
 4. Deploy frontend to Vercel
 5. Set Vercel env vars:
@@ -348,3 +350,5 @@ Hosted default admin credentials are built into the project unless you override 
 
 - `admin@openschedulr.dev`
 - `Admin@123`
+
+On a fresh hosted PostgreSQL database, OpenSchedulr now seeds demo faculty, subjects, rooms, slots, lecture demand, generates a timetable, and publishes it automatically so the hosted UI shows a real result schedule on first load.

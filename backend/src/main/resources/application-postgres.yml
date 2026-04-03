@@ -15,7 +15,8 @@ spring:
 
 app:
   seed:
-    demo-enabled: ${APP_SEED_DEMO_ENABLED:false}
+    demo-enabled: ${APP_SEED_DEMO_ENABLED:true}
+    hosted-schedule-enabled: ${APP_HOSTED_SCHEDULE_ENABLED:true}
   bootstrap-admin:
     enabled: ${BOOTSTRAP_ADMIN_ENABLED:true}
     email: ${BOOTSTRAP_ADMIN_EMAIL:admin@openschedulr.dev}
