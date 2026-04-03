@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Activity,
   BellRing,
+  Building2,
   CalendarClock,
   ChartColumn,
   GraduationCap,
   LayoutDashboard,
   RefreshCw,
   Send,
+  Settings2,
   Sparkles,
   Users
 } from "lucide-react";
@@ -42,13 +45,13 @@ import {
   updateRoom,
   updateTimeSlot
 } from "../lib/api";
-import { subscribeToNotifications } from "../lib/realtime";
+import { AdminSetupPanel } from "../components/admin-setup-panel";
 import { ConflictPanel } from "../components/conflict-panel";
 import { NotificationPanel } from "../components/notification-panel";
 import { StatCard } from "../components/stat-card";
 import { TimetableBoard } from "../components/timetable-board";
-import { AdminSetupPanel } from "../components/admin-setup-panel";
 import { Button } from "../components/ui/button";
+import { subscribeToNotifications } from "../lib/realtime";
 import { useAuthStore } from "../store/auth-store";
 import type { NotificationItem, TimetableEntry } from "../types";
 
@@ -154,124 +157,156 @@ export function DashboardPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <div className="aurora-orb left-[5%] top-[8%] h-56 w-56 bg-indigo-500/24" />
-      <div className="aurora-orb right-[8%] top-[10%] h-72 w-72 bg-sky-400/14" style={{ animationDelay: "1.4s" }} />
-      <div className="aurora-orb bottom-[8%] right-[12%] h-72 w-72 bg-emerald-500/16" style={{ animationDelay: "2.5s" }} />
-
-      <div className="mx-auto max-w-[1600px] px-4 py-6 md:px-8">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-[1.5rem] border border-white/10 bg-white/5 px-4 py-3 shadow-[0_18px_44px_rgba(0,0,0,0.24)] backdrop-blur-xl">
-          <div className="flex flex-wrap items-center gap-3 text-sm text-white/70">
-            <span className="section-kicker">
-              <Sparkles className="h-3.5 w-3.5" />
-              Modern scheduling workspace
-            </span>
-            <span className="rounded-full border border-white/8 bg-white/6 px-3 py-2 font-medium">Realtime review</span>
-            <span className="rounded-full border border-white/8 bg-white/6 px-3 py-2 font-medium">Planner studio</span>
-          </div>
-          <div className="flex flex-wrap items-center gap-3 text-sm text-white/60">
-            <span className="rounded-full border border-emerald-500/18 bg-emerald-500/10 px-3 py-2">{timetable.length} sessions</span>
-            <span className="rounded-full border border-amber-400/18 bg-amber-400/10 px-3 py-2">{conflicts.length} conflict markers</span>
-          </div>
-        </div>
-
-        <div className="grid gap-6 xl:grid-cols-[300px_1fr]">
-          <aside className="mesh-card shimmer-border animate-rise rounded-[2rem] p-6 text-white shadow-[0_28px_80px_rgba(0,0,0,0.32)]">
+      <div className="aurora-orb left-[8%] top-[14%] h-56 w-56 bg-violet-300/40" />
+      <div className="aurora-orb right-[10%] top-[8%] h-64 w-64 bg-sky-200/50" style={{ animationDelay: "1.4s" }} />
+      <div className="mx-auto max-w-[1580px] px-4 py-6 md:px-6">
+        <div className="grid gap-5 xl:grid-cols-[255px_1fr]">
+          <aside className="glass-panel shimmer-border animate-rise rounded-[2rem] p-5 shadow-panel">
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl border border-white/10 bg-white/6 p-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#7b61ff,#5b9bff)] text-white shadow-[0_12px_24px_rgba(91,155,255,0.22)]">
                 <LayoutDashboard className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-white/40">OpenSchedulr</p>
-                <p className="mt-1 text-lg font-semibold">Operations console</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">OpenSchedulr</p>
+                <p className="mt-1 text-lg font-semibold text-slate-900">Scheduler console</p>
               </div>
             </div>
 
-            <div className="mt-6 rounded-[1.75rem] border border-white/10 bg-white/6 p-4">
-              <p className="text-xs uppercase tracking-[0.24em] text-white/42">Control stance</p>
-              <p className="mt-3 text-2xl font-semibold">Studio mode</p>
-              <p className="mt-2 text-sm leading-6 text-white/60">Generate, inspect, override, and publish from one modern review loop.</p>
+            <div className="mt-6 rounded-[1.5rem] border border-slate-200 bg-[#fafbff] p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Workspace</p>
+              <p className="mt-2 text-base font-semibold text-slate-900">{email}</p>
+              <p className="mt-1 text-sm text-slate-500">{role === "ADMIN" ? "Administrator access" : "Faculty access"}</p>
             </div>
 
-            <div className="mt-6 rounded-[1.75rem] border border-white/10 bg-white/6 p-5">
-              <p className="text-xs uppercase tracking-[0.24em] text-white/42">Signed in</p>
-              <p className="mt-3 break-all text-lg font-semibold">{email}</p>
-              <p className="mt-1 text-sm text-white/62">{role === "ADMIN" ? "Administrator" : "Faculty member"}</p>
+            <div className="mt-6 space-y-2">
+              <SidebarNav icon={<Sparkles className="h-4 w-4" />} label="Weekly planner" active />
+              <SidebarNav icon={<CalendarClock className="h-4 w-4" />} label="Timetable reviews" />
+              <SidebarNav icon={<Users className="h-4 w-4" />} label="Faculty allocation" />
+              <SidebarNav icon={<Building2 className="h-4 w-4" />} label="Rooms and sections" />
+              <SidebarNav icon={<Settings2 className="h-4 w-4" />} label="Scheduling inputs" />
+            </div>
+
+            <div className="mt-6 grid gap-3">
+              <MiniMetric label="Conflicts" value={String(conflicts.length)} tone="orange" />
+              <MiniMetric label="Signals" value={String(notifications.length)} tone="violet" />
             </div>
 
             <div className="mt-6 space-y-3">
-              <SidebarMetric label="Planner health" value={conflicts.length === 0 ? "Stable" : "Needs review"} helper={conflicts.length === 0 ? "No critical issues detected right now." : `${conflicts.length} active issue${conflicts.length === 1 ? "" : "s"} to review.`} />
-              <SidebarMetric label="Live signals" value={String(notifications.length)} helper="Recent planner and faculty notification events." />
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-3">
               {role === "ADMIN" ? (
                 <>
-                  <Button variant="secondary" className="w-full justify-center bg-white text-slate-950 hover:bg-slate-100" onClick={() => generateMutation.mutate()} disabled={adminBusy}>
+                  <Button className="w-full justify-center py-3" onClick={() => generateMutation.mutate()} disabled={adminBusy}>
                     <RefreshCw className={`mr-2 h-4 w-4 ${generateMutation.isPending ? "animate-spin" : ""}`} />
                     {generateMutation.isPending ? "Generating..." : "Generate timetable"}
                   </Button>
-                  <Button variant="outline" className="w-full justify-center border-white/14 bg-white/6 text-white hover:bg-white/12" onClick={() => publishMutation.mutate()} disabled={adminBusy}>
+                  <Button variant="outline" className="w-full justify-center py-3" onClick={() => publishMutation.mutate()} disabled={adminBusy}>
                     <Send className="mr-2 h-4 w-4" />
                     {publishMutation.isPending ? "Publishing..." : "Publish"}
                   </Button>
                 </>
               ) : null}
-              <Button variant="outline" className="w-full justify-center border-white/14 bg-white/6 text-white hover:bg-white/12" onClick={logout}>
-                Logout
-              </Button>
+              <Button variant="outline" className="w-full justify-center py-3" onClick={logout}>Logout</Button>
             </div>
           </aside>
 
-          <main className="space-y-6">
-            <section className="mesh-card shimmer-border animate-rise overflow-hidden rounded-[2rem] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.32)]">
-              <div className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
-                <div>
-                  <div className="section-kicker">Campus planning</div>
-                  <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                    A modern control room for faculty scheduling.
-                  </h1>
-                  <p className="mt-4 max-w-3xl text-sm leading-7 text-white/62">
-                    Generate draft timetables, balance workload, review conflicts, and publish changes with a cleaner visual system and much stronger timetable navigation.
-                  </p>
-                  <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-white/58">
-                    <span className="rounded-full border border-white/10 bg-white/6 px-3 py-2">Live admin controls</span>
-                    <span className="rounded-full border border-white/10 bg-white/6 px-3 py-2">Quick schedule filters</span>
-                    <span className="rounded-full border border-white/10 bg-white/6 px-3 py-2">Publish-ready workflow</span>
+          <main className="space-y-5">
+            <section className="mesh-card shimmer-border animate-rise rounded-[2rem] p-5 shadow-panel">
+              <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+                <div className="max-w-3xl">
+                  <div className="section-kicker">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    Smart planning workspace
                   </div>
-                  <div className="mt-8 grid gap-4 md:grid-cols-3">
-                    <HeroMetric title="Generator" value={adminBusy ? "Working now" : "Ready"} text="Generate and publish from the same control surface." />
-                    <HeroMetric title="Review" value={timetable.length > 0 ? "Schedule loaded" : "Waiting"} text="Switch between weekly, room, faculty, section, batch, and program views." />
-                    <HeroMetric title="Collaboration" value={`${notifications.length} signals`} text="Notifications and analytics stay visible while you review the draft." />
+                  <h1 className="mt-4 text-4xl font-semibold tracking-tight text-slate-900 md:text-[2.8rem]">
+                    Build, review, and publish clean faculty schedules.
+                  </h1>
+                  <p className="mt-3 text-sm leading-7 text-slate-600">
+                    A lighter scheduling studio inspired by modern planning products, with richer timetable views, clearer controls, and a cleaner weekly workflow.
+                  </p>
+                  <div className="mt-5 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    <span className="rounded-full border border-slate-200 bg-white px-3 py-2 shadow-sm">Board + table review</span>
+                    <span className="rounded-full border border-slate-200 bg-white px-3 py-2 shadow-sm">Faculty / room filters</span>
+                    <span className="rounded-full border border-slate-200 bg-white px-3 py-2 shadow-sm">Publish workflow</span>
                   </div>
                 </div>
 
-                <div className="grid gap-4">
-                  <HeroStatusCard
-                    title="Schedule status"
-                    value={timetable.length > 0 ? "Draft schedule active" : "Waiting for generation"}
-                    text="Create a draft, adjust with drag-and-drop, and publish once the week feels clean."
-                    variant="emerald"
-                  />
-                  <HeroStatusCard
-                    title="Last action"
-                    value={adminBusy ? "Processing update" : "Ready for next change"}
-                    text="Setup, review, and publishing now live in one visual rhythm."
-                    variant="indigo"
-                  />
-                  <div className="rounded-[1.75rem] border border-white/10 bg-[linear-gradient(135deg,rgba(99,102,241,0.18),rgba(7,12,22,0.92))] p-5 text-white shadow-[0_24px_55px_rgba(0,0,0,0.3)]">
-                    <p className="text-xs uppercase tracking-[0.22em] text-white/48">Experience goal</p>
-                    <p className="mt-3 text-xl font-semibold">Modern product feel, not plain CRUD.</p>
-                    <p className="mt-3 text-sm leading-6 text-white/62">This rebuild focuses on stronger hierarchy, better surfaces, and a more polished timetable review experience.</p>
-                  </div>
+                <div className="grid gap-3 md:grid-cols-3 xl:w-[520px] xl:grid-cols-1">
+                  <HeroPanel title="Status" value={timetable.length > 0 ? "Draft ready" : "Awaiting generation"} helper="The timetable board updates as soon as sessions are generated or moved." />
+                  <HeroPanel title="Action state" value={adminBusy ? "Processing" : "Ready"} helper="Generate and publish stay available in the sidebar for quick control." />
+                  <HeroPanel title="Signals" value={`${notifications.length} live`} helper="Notifications and conflict checks remain visible while reviewing the week." />
                 </div>
               </div>
             </section>
 
-            <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
-              <StatCard label="Faculty" value={facultyQuery.data?.length ?? 0} helper="Availability, subjects, and load caps are actively tracked." icon={<Users className="h-5 w-5" />} accent="from-indigo-500/15 to-white/5" />
-              <StatCard label="Courses" value={coursesQuery.data?.length ?? 0} helper="Programs, batches, sections, and room types stay attached to every subject." icon={<GraduationCap className="h-5 w-5" />} accent="from-sky-400/12 to-white/5" />
-              <StatCard label="Sessions" value={stats?.totalEntries ?? 0} helper="Draft and published sessions currently in the planner." icon={<CalendarClock className="h-5 w-5" />} accent="from-emerald-500/12 to-white/5" />
-              <StatCard label="Conflicts" value={stats?.totalConflicts ?? 0} helper="Warnings surface early before anything gets published." icon={<Activity className="h-5 w-5" />} accent="from-amber-400/12 to-white/5" />
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <StatCard label="Faculty" value={facultyQuery.data?.length ?? 0} helper="Load, availability, and subject alignment." icon={<Users className="h-5 w-5" />} accent="from-[#ede9ff] to-white" />
+              <StatCard label="Courses" value={coursesQuery.data?.length ?? 0} helper="Subjects mapped to section, program, and room type." icon={<GraduationCap className="h-5 w-5" />} accent="from-[#eef4ff] to-white" />
+              <StatCard label="Sessions" value={stats?.totalEntries ?? 0} helper="Draft and published entries currently in the planner." icon={<CalendarClock className="h-5 w-5" />} accent="from-[#edfdf4] to-white" />
+              <StatCard label="Conflicts" value={stats?.totalConflicts ?? 0} helper="Problems surfaced before final publication." icon={<Activity className="h-5 w-5" />} accent="from-[#fff4ea] to-white" />
+            </div>
+
+            <div className="grid gap-5 2xl:grid-cols-[1.8fr_1fr]">
+              <div className="space-y-5">
+                <TimetableBoard
+                  timetable={timetable}
+                  timeSlots={timeSlotsQuery.data ?? []}
+                  rooms={roomsQuery.data ?? []}
+                  onDrop={(entryId, roomId, timeSlotId) => {
+                    if (role === "ADMIN") {
+                      rescheduleMutation.mutate({ entryId, roomId, timeSlotId });
+                    }
+                  }}
+                />
+
+                <div className="grid gap-4 xl:grid-cols-2">
+                  <div className="glass-panel rounded-[1.5rem] p-5 shadow-panel">
+                    <div className="flex items-center gap-3">
+                      <ChartColumn className="h-5 w-5 text-[#6b57e7]" />
+                      <div>
+                        <h3 className="text-lg font-semibold text-slate-900">Workload balance</h3>
+                        <p className="text-sm text-slate-500">Fast visual scan of teaching distribution across faculty.</p>
+                      </div>
+                    </div>
+                    <div className="mt-5 space-y-4">
+                      {workload.map(([name, count]) => (
+                        <div key={name}>
+                          <div className="mb-2 flex items-center justify-between text-sm text-slate-600">
+                            <span>{name}</span>
+                            <span className="font-semibold">{count} sessions</span>
+                          </div>
+                          <div className="h-2.5 overflow-hidden rounded-full bg-slate-100">
+                            <div className="h-full rounded-full bg-[linear-gradient(90deg,#7b61ff,#5b9bff)]" style={{ width: `${Math.min(Number(count) * 20, 100)}%` }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="glass-panel rounded-[1.5rem] p-5 shadow-panel">
+                    <div className="flex items-center gap-3">
+                      <BellRing className="h-5 w-5 text-[#5b9bff]" />
+                      <div>
+                        <h3 className="text-lg font-semibold text-slate-900">Room utilization</h3>
+                        <p className="text-sm text-slate-500">Spot crowded rooms and underused teaching spaces quickly.</p>
+                      </div>
+                    </div>
+                    <div className="mt-5 space-y-3">
+                      {roomUtilization.map(([room, count]) => (
+                        <div key={room} className="rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="font-medium text-slate-800">{room}</span>
+                            <span className="font-semibold text-slate-600">{count} sessions</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-5">
+                <ConflictPanel conflicts={conflicts} />
+                <NotificationPanel notifications={notifications} />
+              </div>
             </div>
 
             {role === "ADMIN" ? (
@@ -306,71 +341,6 @@ export function DashboardPage() {
                 onDeleteDemand={deleteDemandMutation.mutateAsync}
               />
             ) : null}
-
-            <div className="grid gap-6 2xl:grid-cols-[1.8fr_1fr]">
-              <div className="space-y-6">
-                <TimetableBoard
-                  timetable={timetable}
-                  timeSlots={timeSlotsQuery.data ?? []}
-                  rooms={roomsQuery.data ?? []}
-                  onDrop={(entryId, roomId, timeSlotId) => {
-                    if (role === "ADMIN") {
-                      rescheduleMutation.mutate({ entryId, roomId, timeSlotId });
-                    }
-                  }}
-                />
-
-                <div className="grid gap-4 xl:grid-cols-2">
-                  <div className="mesh-card rounded-[1.75rem] p-5 shadow-[0_24px_55px_rgba(0,0,0,0.24)]">
-                    <div className="flex items-center gap-3">
-                      <ChartColumn className="h-5 w-5 text-emerald-300" />
-                      <div>
-                        <h3 className="text-lg font-semibold text-white">Workload balance</h3>
-                        <p className="text-sm text-white/54">Quick scan of teaching distribution across faculty.</p>
-                      </div>
-                    </div>
-                    <div className="mt-5 space-y-3">
-                      {workload.map(([name, count]) => (
-                        <div key={name}>
-                          <div className="mb-2 flex items-center justify-between text-sm text-white/72">
-                            <span>{name}</span>
-                            <span className="font-semibold">{count} sessions</span>
-                          </div>
-                          <div className="h-3 overflow-hidden rounded-full bg-white/8">
-                            <div className="h-full rounded-full bg-[linear-gradient(90deg,#818cf8,#38bdf8,#22c55e)]" style={{ width: `${Math.min(Number(count) * 20, 100)}%` }} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mesh-card rounded-[1.75rem] p-5 shadow-[0_24px_55px_rgba(0,0,0,0.24)]">
-                    <div className="flex items-center gap-3">
-                      <BellRing className="h-5 w-5 text-sky-300" />
-                      <div>
-                        <h3 className="text-lg font-semibold text-white">Room utilization</h3>
-                        <p className="text-sm text-white/54">Identify busy spaces and underused teaching rooms.</p>
-                      </div>
-                    </div>
-                    <div className="mt-5 space-y-3">
-                      {roomUtilization.map(([room, count]) => (
-                        <div key={room} className="rounded-2xl border border-white/8 bg-white/6 px-4 py-3">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="font-medium text-white">{room}</span>
-                            <span className="font-semibold text-white/78">{count} sessions</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                <ConflictPanel conflicts={conflicts} />
-                <NotificationPanel notifications={notifications} />
-              </div>
-            </div>
           </main>
         </div>
       </div>
@@ -378,47 +348,35 @@ export function DashboardPage() {
   );
 }
 
-function SidebarMetric({ label, value, helper }: { label: string; value: string; helper: string }) {
+function SidebarNav({ icon, label, active = false }: { icon: ReactNode; label: string; active?: boolean }) {
   return (
-    <div className="rounded-[1.4rem] border border-white/10 bg-white/6 p-4">
-      <p className="text-xs uppercase tracking-[0.22em] text-white/42">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-white">{value}</p>
-      <p className="mt-2 text-sm leading-6 text-white/56">{helper}</p>
+    <div className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${active ? "bg-[#f1edff] text-[#6b57e7] shadow-sm" : "text-slate-500 hover:bg-slate-50"}`}>
+      <span className={active ? "text-[#6b57e7]" : "text-slate-400"}>{icon}</span>
+      <span>{label}</span>
     </div>
   );
 }
 
-function HeroMetric({ title, value, text }: { title: string; value: string; text: string }) {
+function MiniMetric({ label, value, tone }: { label: string; value: string; tone: "orange" | "violet" }) {
+  const tones = {
+    orange: "bg-[#fff4ea] text-[#d97a2b]",
+    violet: "bg-[#f1edff] text-[#6b57e7]"
+  };
+
   return (
-    <div className="hero-metric rounded-[1.5rem] border border-white/10 bg-white/6 p-4 shadow-[0_18px_38px_rgba(0,0,0,0.22)]">
-      <p className="text-xs uppercase tracking-[0.22em] text-white/44">{title}</p>
-      <p className="mt-3 text-2xl font-semibold text-white">{value}</p>
-      <p className="mt-2 text-sm leading-6 text-white/58">{text}</p>
+    <div className={`rounded-[1.4rem] border border-slate-200 p-4 ${tones[tone]}`}>
+      <p className="text-xs font-semibold uppercase tracking-[0.22em] opacity-70">{label}</p>
+      <p className="mt-2 text-2xl font-semibold">{value}</p>
     </div>
   );
 }
 
-function HeroStatusCard({
-  title,
-  value,
-  text,
-  variant
-}: {
-  title: string;
-  value: string;
-  text: string;
-  variant: "emerald" | "indigo";
-}) {
-  const surface =
-    variant === "emerald"
-      ? "bg-[linear-gradient(145deg,rgba(34,197,94,0.12),rgba(8,16,31,0.88))]"
-      : "bg-[linear-gradient(145deg,rgba(99,102,241,0.14),rgba(8,16,31,0.88))]";
-
+function HeroPanel({ title, value, helper }: { title: string; value: string; helper: string }) {
   return (
-    <div className={`soft-ring rounded-[1.75rem] border border-white/10 ${surface} p-5`}>
-      <p className="text-xs uppercase tracking-[0.22em] text-white/44">{title}</p>
-      <p className="mt-3 text-2xl font-semibold text-white">{value}</p>
-      <p className="mt-3 text-sm leading-6 text-white/58">{text}</p>
+    <div className="hero-metric rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-[0_14px_30px_rgba(18,27,44,0.06)]">
+      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">{title}</p>
+      <p className="mt-2 text-2xl font-semibold text-slate-900">{value}</p>
+      <p className="mt-2 text-sm leading-6 text-slate-500">{helper}</p>
     </div>
   );
 }

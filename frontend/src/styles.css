@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  color: #eff6ff;
-  background: #050816;
+  color: #162033;
+  background: #f5f7fb;
   font-family: "IBM Plex Sans", system-ui, sans-serif;
 }
 
@@ -15,13 +15,11 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  color: #eff6ff;
+  color: #162033;
   background:
-    radial-gradient(circle at 12% 12%, rgba(99, 102, 241, 0.22), transparent 28%),
-    radial-gradient(circle at 84% 18%, rgba(56, 189, 248, 0.16), transparent 24%),
-    radial-gradient(circle at 78% 82%, rgba(34, 197, 94, 0.16), transparent 24%),
-    linear-gradient(180deg, #050816 0%, #08101f 46%, #091524 100%);
-  background-attachment: fixed;
+    radial-gradient(circle at 8% 10%, rgba(123, 97, 255, 0.12), transparent 24%),
+    radial-gradient(circle at 92% 8%, rgba(91, 155, 255, 0.1), transparent 20%),
+    linear-gradient(180deg, #fbfcff 0%, #f3f6fb 48%, #edf2f8 100%);
   font-family: "IBM Plex Sans", system-ui, sans-serif;
 }
 
@@ -35,11 +33,11 @@ body::before {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 42px 42px;
-  opacity: 0.22;
-  mask-image: radial-gradient(circle at center, black 42%, transparent 86%);
+    linear-gradient(rgba(22, 32, 51, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22, 32, 51, 0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.45;
+  mask-image: radial-gradient(circle at center, black 48%, transparent 88%);
 }
 
 body::after {
@@ -47,8 +45,10 @@ body::after {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.18;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.65), transparent 18%),
+    radial-gradient(circle at 86% 14%, rgba(255, 255, 255, 0.55), transparent 18%);
+  opacity: 0.8;
 }
 
 button {
@@ -60,33 +60,31 @@ button:hover {
 }
 
 ::selection {
-  background: rgba(99, 102, 241, 0.35);
-  color: #fff;
+  background: rgba(123, 97, 255, 0.2);
 }
 
 .glass-panel {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(240, 247, 255, 0.76));
-  border: 1px solid rgba(255, 255, 255, 0.62);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
-  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.18);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 255, 0.9));
+  border: 1px solid rgba(214, 222, 236, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .mesh-card {
   background:
-    radial-gradient(circle at top left, rgba(99, 102, 241, 0.18), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.16), transparent 26%),
-    linear-gradient(180deg, rgba(11, 18, 32, 0.92), rgba(8, 16, 31, 0.8));
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
+    radial-gradient(circle at top left, rgba(123, 97, 255, 0.12), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(91, 155, 255, 0.1), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 249, 253, 0.94));
+  border: 1px solid rgba(219, 225, 238, 0.95);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .aurora-orb {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(18px);
-  opacity: 0.65;
+  filter: blur(14px);
+  opacity: 0.7;
   animation: drift 12s ease-in-out infinite;
 }
 
@@ -101,7 +99,7 @@ button:hover {
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(130deg, rgba(255, 255, 255, 0.42), rgba(99, 102, 241, 0.24), rgba(34, 197, 94, 0.22), rgba(255, 255, 255, 0.26));
+  background: linear-gradient(130deg, rgba(255, 255, 255, 0.95), rgba(123, 97, 255, 0.18), rgba(91, 155, 255, 0.16), rgba(255, 255, 255, 0.95));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -114,20 +112,20 @@ button:hover {
   gap: 0.55rem;
   border-radius: 9999px;
   padding: 0.55rem 0.95rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
+  background: rgba(123, 97, 255, 0.08);
+  border: 1px solid rgba(123, 97, 255, 0.12);
+  box-shadow: 0 12px 24px rgba(123, 97, 255, 0.08);
   text-transform: uppercase;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.24em;
   font-size: 0.72rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.74);
+  color: rgba(67, 52, 140, 0.84);
 }
 
 .soft-ring {
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.06),
-    0 22px 52px rgba(0, 0, 0, 0.34);
+    0 0 0 1px rgba(232, 237, 246, 0.9),
+    0 18px 38px rgba(18, 27, 44, 0.08);
 }
 
 .hero-metric {
@@ -138,10 +136,10 @@ button:hover {
 .hero-metric::after {
   content: "";
   position: absolute;
-  inset: auto -10% -54% 35%;
-  height: 110px;
+  inset: auto -10% -46% 34%;
+  height: 100px;
   border-radius: 9999px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 68%);
+  background: radial-gradient(circle, rgba(123, 97, 255, 0.12), transparent 68%);
   pointer-events: none;
 }
 
@@ -149,21 +147,19 @@ button:hover {
   position: relative;
   overflow: hidden;
   border-radius: 1.35rem;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.04));
-  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(223, 229, 240, 0.96);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(246, 248, 252, 0.92));
+  box-shadow: 0 18px 40px rgba(18, 27, 44, 0.08);
   padding: 1.1rem;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
 }
 
 .card::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, transparent 32%, rgba(255, 255, 255, 0.09), transparent 64%);
+  background: linear-gradient(120deg, transparent 34%, rgba(123, 97, 255, 0.08), transparent 66%);
   opacity: 0;
-  transition: opacity 220ms ease;
+  transition: opacity 200ms ease;
 }
 
 .card:hover::after {
@@ -173,32 +169,32 @@ button:hover {
 .input {
   width: 100%;
   border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.06);
-  color: #fff;
+  border: 1px solid rgba(217, 224, 237, 1);
+  background: rgba(255, 255, 255, 0.94);
+  color: #162033;
   padding: 0.95rem 1rem;
   outline: none;
   transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
 
 .input::placeholder {
-  color: rgba(255, 255, 255, 0.38);
+  color: rgba(22, 32, 51, 0.4);
 }
 
 .input:focus {
-  border-color: rgba(99, 102, 241, 0.48);
-  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(123, 97, 255, 0.4);
+  background: white;
   box-shadow:
-    0 0 0 4px rgba(99, 102, 241, 0.16),
-    0 20px 40px rgba(0, 0, 0, 0.22);
+    0 0 0 4px rgba(123, 97, 255, 0.12),
+    0 14px 34px rgba(18, 27, 44, 0.08);
 }
 
 .animate-rise {
-  animation: riseIn 540ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: riseIn 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .animate-fade-delay {
-  animation: riseIn 720ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: riseIn 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 @keyframes drift {
@@ -206,14 +202,14 @@ button:hover {
     transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translate3d(18px, -18px, 0) scale(1.08);
+    transform: translate3d(14px, -16px, 0) scale(1.06);
   }
 }
 
 @keyframes riseIn {
   from {
     opacity: 0;
-    transform: translate3d(0, 16px, 0) scale(0.985);
+    transform: translate3d(0, 16px, 0) scale(0.988);
   }
   to {
     opacity: 1;

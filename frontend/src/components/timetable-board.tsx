@@ -1,5 +1,7 @@
 import { DndContext, DragEndEvent, useDraggable, useDroppable } from "@dnd-kit/core";
+import { ArrowUpDown, CalendarDays, GraduationCap, Search, Table2 } from "lucide-react";
 import { useMemo, useState } from "react";
+import type { ReactNode } from "react";
 import type { Room, TimeSlot, TimetableEntry } from "../types";
 
 const dayOrder = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"];
@@ -10,33 +12,34 @@ const dayLabels: Record<string, string> = {
   THURSDAY: "Thursday",
   FRIDAY: "Friday"
 };
-const filterClassName = "w-full rounded-2xl border border-ink/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(244,239,230,0.82))] px-4 py-3 text-sm text-ink outline-none transition duration-300 focus:border-moss/35 focus:bg-white focus:shadow-[0_0_0_4px_rgba(31,92,75,0.08)]";
+
+const filterClassName =
+  "w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition duration-300 focus:border-[#7b61ff]/40 focus:bg-white focus:shadow-[0_0_0_4px_rgba(123,97,255,0.12)]";
 
 function DraggableClass({ entry }: { entry: TimetableEntry }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: entry.id, data: entry });
+
   return (
     <div
       ref={setNodeRef}
       {...listeners}
       {...attributes}
       style={{ transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined }}
-      className="cursor-grab rounded-2xl border border-white/70 bg-[linear-gradient(145deg,rgba(255,255,255,0.95),rgba(244,239,230,0.85))] p-3 text-sm text-ink shadow-[0_12px_22px_rgba(16,37,66,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_32px_rgba(16,37,66,0.14)]"
+      className="cursor-grab rounded-2xl border border-slate-200 bg-white p-3 shadow-[0_10px_24px_rgba(18,27,44,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_30px_rgba(18,27,44,0.1)]"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="font-semibold">{entry.courseCode}</p>
-          <p className="mt-1 text-ink/80">{entry.facultyName}</p>
+          <p className="font-semibold text-slate-900">{entry.courseCode}</p>
+          <p className="mt-1 text-sm text-slate-500">{entry.facultyName}</p>
         </div>
-        <span className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${entry.source === "MANUAL" ? "bg-ember/10 text-ember" : "bg-moss/10 text-moss"}`}>
+        <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${entry.source === "MANUAL" ? "bg-orange-100 text-orange-600" : "bg-[#ede9ff] text-[#6b57e7]"}`}>
           {entry.source}
         </span>
       </div>
-      <div className="mt-3 flex flex-wrap gap-2 text-xs text-ink/65">
-        <span>{entry.roomName}</span>
-        <span>{entry.startTime.slice(0, 5)}-{entry.endTime.slice(0, 5)}</span>
-        <span>{entry.program}</span>
-        <span>{entry.batchName}</span>
-        <span>Sec {entry.section}</span>
+      <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-500">
+        <span className="rounded-full bg-slate-100 px-2.5 py-1">{entry.roomName}</span>
+        <span className="rounded-full bg-slate-100 px-2.5 py-1">{entry.startTime.slice(0, 5)}-{entry.endTime.slice(0, 5)}</span>
+        <span className="rounded-full bg-slate-100 px-2.5 py-1">{entry.program}</span>
       </div>
     </div>
   );
@@ -44,15 +47,29 @@ function DraggableClass({ entry }: { entry: TimetableEntry }) {
 
 function DroppableCell({ slot, entries }: { slot: TimeSlot; entries: TimetableEntry[] }) {
   const { isOver, setNodeRef } = useDroppable({ id: slot.id, data: slot });
+
   return (
-    <div ref={setNodeRef} className={`min-h-36 rounded-3xl border p-3 transition duration-300 ${isOver ? "border-ember bg-[linear-gradient(135deg,rgba(255,240,229,0.92),rgba(255,255,255,0.96))] shadow-[0_18px_32px_rgba(217,108,61,0.12)]" : "border-white/60 bg-[linear-gradient(180deg,rgba(255,250,243,0.95),rgba(255,255,255,0.88))]"}`}>
+    <div
+      ref={setNodeRef}
+      className={`min-h-40 rounded-[1.5rem] border p-3 transition duration-300 ${
+        isOver
+          ? "border-[#7b61ff] bg-[#f5f2ff] shadow-[0_16px_28px_rgba(123,97,255,0.12)]"
+          : "border-slate-200 bg-[#fafbff]"
+      }`}
+    >
       <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ink/55">{slot.label}</p>
-        <span className="rounded-full bg-white/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink/45">{entries.length} item{entries.length === 1 ? "" : "s"}</span>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{slot.label}</p>
+        <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500 shadow-sm">
+          {entries.length} item{entries.length === 1 ? "" : "s"}
+        </span>
       </div>
       <div className="space-y-2">
         {entries.map((entry) => <DraggableClass key={entry.id} entry={entry} />)}
-        {entries.length === 0 ? <div className="rounded-2xl border border-dashed border-ink/10 px-3 py-6 text-center text-xs uppercase tracking-[0.2em] text-ink/35">Drop lecture here</div> : null}
+        {entries.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-slate-200 px-3 py-8 text-center text-xs uppercase tracking-[0.22em] text-slate-400">
+            Drop lecture here
+          </div>
+        ) : null}
       </div>
     </div>
   );
@@ -91,23 +108,28 @@ export function TimetableBoard({ timetable, timeSlots, rooms, onDrop }: Timetabl
   const programOptions = useMemo(() => sortUnique(timetable.map((entry) => entry.program)), [timetable]);
   const normalizedSearch = search.trim().toLowerCase();
 
-  const filteredTimetable = timetable.filter((entry) => {
-    if (facultyFilter !== "ALL" && entry.facultyName !== facultyFilter) return false;
-    if (roomFilter !== "ALL" && entry.roomName !== roomFilter) return false;
-    if (sectionFilter !== "ALL" && entry.section !== sectionFilter) return false;
-    if (batchFilter !== "ALL" && entry.batchName !== batchFilter) return false;
-    if (departmentFilter !== "ALL" && entry.department !== departmentFilter) return false;
-    if (programFilter !== "ALL" && entry.program !== programFilter) return false;
-    if (dayFilter !== "ALL" && entry.dayOfWeek !== dayFilter) return false;
-    if (!normalizedSearch) return true;
-    const haystack = `${entry.courseCode} ${entry.courseTitle} ${entry.facultyName} ${entry.roomName} ${entry.department} ${entry.program} ${entry.batchName} ${entry.section}`.toLowerCase();
-    return haystack.includes(normalizedSearch);
-  }).sort((left, right) => compareEntries(left, right, sortBy));
+  const filteredTimetable = timetable
+    .filter((entry) => {
+      if (facultyFilter !== "ALL" && entry.facultyName !== facultyFilter) return false;
+      if (roomFilter !== "ALL" && entry.roomName !== roomFilter) return false;
+      if (sectionFilter !== "ALL" && entry.section !== sectionFilter) return false;
+      if (batchFilter !== "ALL" && entry.batchName !== batchFilter) return false;
+      if (departmentFilter !== "ALL" && entry.department !== departmentFilter) return false;
+      if (programFilter !== "ALL" && entry.program !== programFilter) return false;
+      if (dayFilter !== "ALL" && entry.dayOfWeek !== dayFilter) return false;
+      if (!normalizedSearch) return true;
 
-  const groupedByDay = dayOrder.map((day) => ({
-    day,
-    slots: orderedSlots.filter((slot) => slot.dayOfWeek === day)
-  })).filter((group) => group.slots.length > 0);
+      const haystack = `${entry.courseCode} ${entry.courseTitle} ${entry.facultyName} ${entry.roomName} ${entry.department} ${entry.program} ${entry.batchName} ${entry.section}`.toLowerCase();
+      return haystack.includes(normalizedSearch);
+    })
+    .sort((left, right) => compareEntries(left, right, sortBy));
+
+  const groupedByDay = dayOrder
+    .map((day) => ({
+      day,
+      slots: orderedSlots.filter((slot) => slot.dayOfWeek === day)
+    }))
+    .filter((group) => group.slots.length > 0);
 
   const groupedViews = {
     faculty: buildGroupedRows(filteredTimetable, (entry) => entry.facultyName),
@@ -128,41 +150,49 @@ export function TimetableBoard({ timetable, timeSlots, rooms, onDrop }: Timetabl
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <div className="glass-panel shimmer-border animate-rise rounded-[1.75rem] border border-white/55 p-5 shadow-panel">
-        <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div className="glass-panel shimmer-border animate-rise rounded-[1.75rem] border border-slate-200 p-5 shadow-panel">
+        <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-moss">Timetable review</p>
-            <h3 className="mt-2 text-2xl font-semibold text-ink">Scheduling Studio</h3>
-            <p className="mt-1 text-sm text-ink/70">See the final schedule by room, section, batch, department, program, or faculty using the same underlying timetable.</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#6b57e7]">Timetable workspace</p>
+            <h3 className="mt-2 text-2xl font-semibold text-slate-900">Weekly board and schedule table</h3>
+            <p className="mt-1 text-sm text-slate-600">
+              Review the timetable visually by day, then audit the same schedule in a clean table for publishing.
+            </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <div className="rounded-full bg-[linear-gradient(135deg,rgba(31,92,75,0.12),rgba(255,255,255,0.9))] px-3 py-2 text-sm font-medium text-moss shadow-sm">{rooms.length} rooms available</div>
-            <div className="rounded-full bg-[linear-gradient(135deg,rgba(16,37,66,0.06),rgba(255,255,255,0.92))] px-3 py-2 text-sm font-medium text-ink/70 shadow-sm">{filteredTimetable.length} scheduled sessions</div>
+            <InfoPill icon={<CalendarDays className="h-4 w-4" />} text={`${orderedSlots.length} active slots`} />
+            <InfoPill icon={<GraduationCap className="h-4 w-4" />} text={`${filteredTimetable.length} scheduled sessions`} />
+            <InfoPill icon={<Table2 className="h-4 w-4" />} text="Board + table views" />
           </div>
         </div>
 
-        <div className="mb-6 space-y-4 rounded-[1.5rem] border border-white/55 bg-[linear-gradient(145deg,rgba(244,239,230,0.72),rgba(255,255,255,0.88))] p-4 shadow-sm">
+        <div className="mb-6 rounded-[1.5rem] border border-slate-200 bg-[#f7f8fc] p-4">
           <div className="flex flex-wrap gap-2">
             {[
               ["week", "Weekly board"],
-              ["faculty", "Faculty-wise"],
-              ["room", "Room-wise"],
-              ["section", "Section-wise"],
-              ["batch", "Batch-wise"],
-              ["department", "Dept-wise"],
-              ["program", "Program-wise"]
+              ["faculty", "Faculty"],
+              ["room", "Rooms"],
+              ["section", "Sections"],
+              ["batch", "Batches"],
+              ["department", "Departments"],
+              ["program", "Programs"]
             ].map(([id, label]) => (
               <button
                 key={id}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition duration-300 ${viewMode === id ? "bg-[linear-gradient(135deg,#102542,#1f5c4b)] text-white shadow-[0_14px_28px_rgba(16,37,66,0.18)]" : "bg-white/88 text-ink/70 shadow-sm hover:bg-white"}`}
-                onClick={() => setViewMode(id as typeof viewMode)}
                 type="button"
+                className={`rounded-full px-4 py-2 text-sm font-medium transition duration-300 ${
+                  viewMode === id
+                    ? "bg-[linear-gradient(135deg,#7b61ff,#5b9bff)] text-white shadow-[0_12px_28px_rgba(91,155,255,0.22)]"
+                    : "bg-white text-slate-600 shadow-sm hover:bg-slate-50"
+                }`}
+                onClick={() => setViewMode(id as typeof viewMode)}
               >
                 {label}
               </button>
             ))}
           </div>
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-8">
+
+          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-8">
             <select className={filterClassName} value={sortBy} onChange={(event) => setSortBy(event.target.value as typeof sortBy)}>
               <option value="time">Sort by time</option>
               <option value="course">Sort by course</option>
@@ -194,32 +224,103 @@ export function TimetableBoard({ timetable, timeSlots, rooms, onDrop }: Timetabl
               <option value="ALL">All programs</option>
               {programOptions.map((item) => <option key={item} value={item}>{item}</option>)}
             </select>
-            <select className={filterClassName} value={dayFilter} onChange={(event) => setDayFilter(event.target.value)}>
-              <option value="ALL">All days</option>
-              {dayOrder.map((item) => <option key={item} value={item}>{dayLabels[item]}</option>)}
-            </select>
-            <input className={filterClassName} placeholder="Search course, faculty, dept..." value={search} onChange={(event) => setSearch(event.target.value)} />
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <input className={`${filterClassName} pl-11`} placeholder="Search course or faculty..." value={search} onChange={(event) => setSearch(event.target.value)} />
+            </div>
           </div>
         </div>
 
         {viewMode === "week" ? (
-          <div className="grid gap-5 xl:grid-cols-5">
+          <div className="grid gap-4 xl:grid-cols-5">
             {groupedByDay.map((group) => (
               <div key={group.day} className="space-y-3">
-                <div className="rounded-3xl bg-[linear-gradient(135deg,rgba(16,37,66,0.96),rgba(31,92,75,0.84))] px-4 py-4 text-white shadow-[0_20px_36px_rgba(16,37,66,0.18)]">
-                  <p className="text-xs uppercase tracking-[0.25em] text-white/65">Day</p>
-                  <h4 className="mt-2 text-lg font-semibold">{dayLabels[group.day]}</h4>
-                  <p className="mt-1 text-xs text-white/70">{group.slots.length} time block{group.slots.length === 1 ? "" : "s"}</p>
+                <div className="rounded-[1.5rem] border border-[#e4e9f5] bg-white px-4 py-4 shadow-[0_12px_28px_rgba(18,27,44,0.05)]">
+                  <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Day</p>
+                  <h4 className="mt-2 text-lg font-semibold text-slate-900">{dayLabels[group.day]}</h4>
+                  <p className="mt-1 text-xs text-slate-500">{group.slots.length} time block{group.slots.length === 1 ? "" : "s"}</p>
                 </div>
-                {group.slots.map((slot) => <DroppableCell key={slot.id} slot={slot} entries={filteredTimetable.filter((entry) => entry.timeSlotId === slot.id)} />)}
+                {group.slots.map((slot) => (
+                  <DroppableCell key={slot.id} slot={slot} entries={filteredTimetable.filter((entry) => entry.timeSlotId === slot.id)} />
+                ))}
               </div>
             ))}
           </div>
         ) : (
           <GroupedTimetableList groups={groupedViews[viewMode]} emptyMessage="No schedules match the current filter combination." />
         )}
+
+        <div className="mt-6 rounded-[1.5rem] border border-slate-200 bg-[#fafbff] p-4">
+          <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#6b57e7]">Schedule table</p>
+              <h4 className="mt-1 text-lg font-semibold text-slate-900">Structured review before publishing</h4>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-slate-500">
+              <ArrowUpDown className="h-4 w-4" />
+              Sorted by {sortBy}
+            </div>
+          </div>
+
+          <div className="overflow-x-auto rounded-[1.25rem] border border-slate-200 bg-white">
+            <table className="min-w-full text-left text-sm">
+              <thead className="bg-slate-50 text-slate-500">
+                <tr>
+                  <th className="px-4 py-3 font-semibold">Course</th>
+                  <th className="px-4 py-3 font-semibold">Faculty</th>
+                  <th className="px-4 py-3 font-semibold">Day</th>
+                  <th className="px-4 py-3 font-semibold">Time</th>
+                  <th className="px-4 py-3 font-semibold">Room</th>
+                  <th className="px-4 py-3 font-semibold">Batch / Section</th>
+                  <th className="px-4 py-3 font-semibold">Program</th>
+                  <th className="px-4 py-3 font-semibold">Source</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredTimetable.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="px-4 py-8 text-center text-slate-500">
+                      No sessions match the current filter combination.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredTimetable.map((entry) => (
+                    <tr key={entry.id} className="border-t border-slate-100 hover:bg-slate-50/80">
+                      <td className="px-4 py-3">
+                        <div>
+                          <p className="font-semibold text-slate-900">{entry.courseCode}</p>
+                          <p className="text-xs text-slate-500">{entry.courseTitle}</p>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-slate-700">{entry.facultyName}</td>
+                      <td className="px-4 py-3 text-slate-600">{dayLabels[entry.dayOfWeek] ?? entry.dayOfWeek}</td>
+                      <td className="px-4 py-3 text-slate-600">{entry.startTime.slice(0, 5)}-{entry.endTime.slice(0, 5)}</td>
+                      <td className="px-4 py-3 text-slate-600">{entry.roomName}</td>
+                      <td className="px-4 py-3 text-slate-600">{entry.batchName} / {entry.section}</td>
+                      <td className="px-4 py-3 text-slate-600">{entry.program}</td>
+                      <td className="px-4 py-3">
+                        <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${entry.source === "MANUAL" ? "bg-orange-100 text-orange-600" : "bg-[#ede9ff] text-[#6b57e7]"}`}>
+                          {entry.source}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </DndContext>
+  );
+}
+
+function InfoPill({ icon, text }: { icon: ReactNode; text: string }) {
+  return (
+    <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm">
+      {icon}
+      <span>{text}</span>
+    </div>
   );
 }
 
@@ -243,11 +344,13 @@ function compareEntries(left: TimetableEntry, right: TimetableEntry, sortBy: "ti
 }
 
 function buildGroupedRows(entries: TimetableEntry[], keySelector: (entry: TimetableEntry) => string) {
-  return Object.entries(entries.reduce<Record<string, TimetableEntry[]>>((acc, entry) => {
-    const key = keySelector(entry);
-    acc[key] = [...(acc[key] ?? []), entry];
-    return acc;
-  }, {}))
+  return Object.entries(
+    entries.reduce<Record<string, TimetableEntry[]>>((acc, entry) => {
+      const key = keySelector(entry);
+      acc[key] = [...(acc[key] ?? []), entry];
+      return acc;
+    }, {})
+  )
     .sort(([left], [right]) => left.localeCompare(right))
     .map(([title, items]) => ({
       title,
@@ -257,33 +360,35 @@ function buildGroupedRows(entries: TimetableEntry[], keySelector: (entry: Timeta
 
 function GroupedTimetableList({ groups, emptyMessage }: { groups: Array<{ title: string; items: TimetableEntry[] }>; emptyMessage: string }) {
   if (groups.length === 0) {
-    return <div className="rounded-3xl border border-dashed border-ink/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.75),rgba(244,239,230,0.7))] px-4 py-8 text-center text-sm text-ink/45">{emptyMessage}</div>;
+    return <div className="rounded-[1.5rem] border border-dashed border-slate-200 bg-[#fafbff] px-4 py-8 text-center text-sm text-slate-500">{emptyMessage}</div>;
   }
 
   return (
     <div className="grid gap-4 xl:grid-cols-2">
       {groups.map((group) => (
-        <div key={group.title} className="rounded-3xl border border-white/60 bg-[linear-gradient(145deg,rgba(255,250,243,0.95),rgba(255,255,255,0.9))] p-4 shadow-sm">
+        <div key={group.title} className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-[0_12px_28px_rgba(18,27,44,0.05)]">
           <div className="mb-4">
-            <p className="text-lg font-semibold text-ink">{group.title}</p>
-            <p className="mt-1 text-xs uppercase tracking-[0.2em] text-ink/45">{group.items.length} scheduled item{group.items.length === 1 ? "" : "s"}</p>
+            <p className="text-lg font-semibold text-slate-900">{group.title}</p>
+            <p className="mt-1 text-xs uppercase tracking-[0.2em] text-slate-400">{group.items.length} scheduled item{group.items.length === 1 ? "" : "s"}</p>
           </div>
           <div className="space-y-3">
             {group.items.map((entry) => (
-              <div key={entry.id} className="rounded-2xl border border-white/70 bg-[linear-gradient(145deg,rgba(255,255,255,0.95),rgba(244,239,230,0.82))] p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(16,37,66,0.1)]">
+              <div key={entry.id} className="rounded-2xl border border-slate-200 bg-[#fafbff] p-4 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_24px_rgba(18,27,44,0.08)]">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="font-semibold text-ink">{entry.courseCode} · {entry.courseTitle}</p>
-                    <p className="mt-1 text-sm text-ink/70">{entry.facultyName} · {entry.department} · {entry.program}</p>
+                    <p className="font-semibold text-slate-900">{entry.courseCode} · {entry.courseTitle}</p>
+                    <p className="mt-1 text-sm text-slate-500">{entry.facultyName} · {entry.department} · {entry.program}</p>
                   </div>
-                  <span className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${entry.source === "MANUAL" ? "bg-ember/10 text-ember" : "bg-moss/10 text-moss"}`}>{entry.source}</span>
+                  <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${entry.source === "MANUAL" ? "bg-orange-100 text-orange-600" : "bg-[#ede9ff] text-[#6b57e7]"}`}>
+                    {entry.source}
+                  </span>
                 </div>
-                <div className="mt-3 flex flex-wrap gap-2 text-xs text-ink/65">
-                  <span className="rounded-full bg-sand px-3 py-1">{dayLabels[entry.dayOfWeek] ?? entry.dayOfWeek}</span>
-                  <span className="rounded-full bg-sand px-3 py-1">{entry.startTime.slice(0, 5)}-{entry.endTime.slice(0, 5)}</span>
-                  <span className="rounded-full bg-sand px-3 py-1">{entry.roomName}</span>
-                  <span className="rounded-full bg-sand px-3 py-1">Batch {entry.batchName}</span>
-                  <span className="rounded-full bg-sand px-3 py-1">Sec {entry.section}</span>
+                <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-500">
+                  <span className="rounded-full bg-white px-3 py-1 shadow-sm">{dayLabels[entry.dayOfWeek] ?? entry.dayOfWeek}</span>
+                  <span className="rounded-full bg-white px-3 py-1 shadow-sm">{entry.startTime.slice(0, 5)}-{entry.endTime.slice(0, 5)}</span>
+                  <span className="rounded-full bg-white px-3 py-1 shadow-sm">{entry.roomName}</span>
+                  <span className="rounded-full bg-white px-3 py-1 shadow-sm">Batch {entry.batchName}</span>
+                  <span className="rounded-full bg-white px-3 py-1 shadow-sm">Sec {entry.section}</span>
                 </div>
               </div>
             ))}
