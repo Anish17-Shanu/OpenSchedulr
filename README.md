@@ -4,6 +4,12 @@ OpenSchedulr is a production-grade, fully free-to-run faculty class scheduling s
 
 Project documentation reference: Anish-Kumar.
 
+## Live Deployment
+
+- Frontend: `https://open-schedulr.vercel.app/`
+- Backend API root: `https://openschedulr.onrender.com/api`
+- Backend health: `https://openschedulr.onrender.com/api/actuator/health/liveness`
+
 ## Stack
 
 - Frontend: React, Vite, TypeScript, Tailwind CSS, Zustand, React Query
