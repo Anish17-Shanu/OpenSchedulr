@@ -23,6 +23,8 @@ app:
     password: ${BOOTSTRAP_ADMIN_PASSWORD:Admin@123}
   realtime:
     enabled: ${APP_REALTIME_ENABLED:false}
+  solver:
+    enabled: ${APP_SOLVER_ENABLED:false}
 
 springdoc:
   api-docs:

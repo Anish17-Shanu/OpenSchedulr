@@ -21,6 +21,8 @@ import java.time.DayOfWeek;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.optaplanner.core.api.solver.SolverFactory;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,10 +46,12 @@ public class SchedulingService {
     private final RoomRepository roomRepository;
     private final TimeSlotRepository timeSlotRepository;
     private final TimetableEntryRepository timetableEntryRepository;
-    private final SolverFactory<SchedulePlan> solverFactory;
+    private final ObjectProvider<SolverFactory<SchedulePlan>> solverFactoryProvider;
     private final NotificationService notificationService;
     private final AuditService auditService;
     private final ObjectMapper objectMapper;
+    @Value("${app.solver.enabled:true}")
+    private boolean solverEnabled;
 
     private static final TypeReference<List<String>> STRING_LIST = new TypeReference<>() {
     };
@@ -55,6 +59,23 @@ public class SchedulingService {
     @Transactional
     public ScheduleGenerationResponse generateSchedule(String actorEmail) {
         List<LectureDemand> demands = lectureDemandRepository.findAll();
+        List<Room> rooms = roomRepository.findAll();
+        List<TimeSlot> timeSlots = timeSlotRepository.findAll();
+        List<String> warnings = new ArrayList<>();
+
+        if (demands.isEmpty()) {
+            warnings.add("No lecture demand is configured yet.");
+            return new ScheduleGenerationResponse(0, warnings);
+        }
+        if (rooms.isEmpty()) {
+            warnings.add("No rooms are configured yet.");
+            return new ScheduleGenerationResponse(0, warnings);
+        }
+        if (timeSlots.isEmpty()) {
+            warnings.add("No time slots are configured yet.");
+            return new ScheduleGenerationResponse(0, warnings);
+        }
+
         List<LectureAssignment> lectures = new ArrayList<>();
         for (LectureDemand demand : demands) {
             for (int i = 0; i < demand.getSessionsPerWeek(); i++) {
@@ -62,8 +83,7 @@ public class SchedulingService {
             }
         }
 
-        SchedulePlan problem = new SchedulePlan(roomRepository.findAll(), timeSlotRepository.findAll(), lectures);
-        List<String> warnings = new ArrayList<>();
+        SchedulePlan problem = new SchedulePlan(rooms, timeSlots, lectures);
         SchedulePlan solved = solveWithFallback(problem, warnings);
 
         timetableEntryRepository.deleteAllInBatch();
@@ -94,7 +114,16 @@ public class SchedulingService {
     }
 
     private SchedulePlan solveWithFallback(SchedulePlan problem, List<String> warnings) {
+        if (!solverEnabled) {
+            warnings.add("Fast hosted scheduler was used.");
+            return buildFallbackSchedule(problem);
+        }
         try {
+            SolverFactory<SchedulePlan> solverFactory = solverFactoryProvider.getIfAvailable();
+            if (solverFactory == null) {
+                warnings.add("Primary solver is unavailable. A fast fallback scheduler was used.");
+                return buildFallbackSchedule(problem);
+            }
             return CompletableFuture
                     .supplyAsync(() -> solverFactory.buildSolver().solve(problem))
                     .orTimeout(12, TimeUnit.SECONDS)

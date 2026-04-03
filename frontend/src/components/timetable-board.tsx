@@ -67,6 +67,7 @@ interface TimetableBoardProps {
 
 export function TimetableBoard({ timetable, timeSlots, rooms, onDrop }: TimetableBoardProps) {
   const [viewMode, setViewMode] = useState<"week" | "faculty" | "room" | "section" | "batch" | "department" | "program">("week");
+  const [sortBy, setSortBy] = useState<"time" | "course" | "faculty" | "room" | "program">("time");
   const [facultyFilter, setFacultyFilter] = useState("ALL");
   const [roomFilter, setRoomFilter] = useState("ALL");
   const [sectionFilter, setSectionFilter] = useState("ALL");
@@ -101,7 +102,7 @@ export function TimetableBoard({ timetable, timeSlots, rooms, onDrop }: Timetabl
     if (!normalizedSearch) return true;
     const haystack = `${entry.courseCode} ${entry.courseTitle} ${entry.facultyName} ${entry.roomName} ${entry.department} ${entry.program} ${entry.batchName} ${entry.section}`.toLowerCase();
     return haystack.includes(normalizedSearch);
-  });
+  }).sort((left, right) => compareEntries(left, right, sortBy));
 
   const groupedByDay = dayOrder.map((day) => ({
     day,
@@ -161,6 +162,13 @@ export function TimetableBoard({ timetable, timeSlots, rooms, onDrop }: Timetabl
             ))}
           </div>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-8">
+            <select className={filterClassName} value={sortBy} onChange={(event) => setSortBy(event.target.value as typeof sortBy)}>
+              <option value="time">Sort by time</option>
+              <option value="course">Sort by course</option>
+              <option value="faculty">Sort by faculty</option>
+              <option value="room">Sort by room</option>
+              <option value="program">Sort by program</option>
+            </select>
             <select className={filterClassName} value={facultyFilter} onChange={(event) => setFacultyFilter(event.target.value)}>
               <option value="ALL">All faculty</option>
               {facultyOptions.map((item) => <option key={item} value={item}>{item}</option>)}
@@ -216,6 +224,21 @@ export function TimetableBoard({ timetable, timeSlots, rooms, onDrop }: Timetabl
 
 function sortUnique(values: string[]) {
   return [...new Set(values)].filter(Boolean).sort();
+}
+
+function compareEntries(left: TimetableEntry, right: TimetableEntry, sortBy: "time" | "course" | "faculty" | "room" | "program") {
+  switch (sortBy) {
+    case "course":
+      return `${left.courseCode}-${left.courseTitle}`.localeCompare(`${right.courseCode}-${right.courseTitle}`);
+    case "faculty":
+      return left.facultyName.localeCompare(right.facultyName);
+    case "room":
+      return left.roomName.localeCompare(right.roomName);
+    case "program":
+      return `${left.program}-${left.batchName}-${left.section}`.localeCompare(`${right.program}-${right.batchName}-${right.section}`);
+    default:
+      return `${left.dayOfWeek}-${left.startTime}-${left.courseCode}`.localeCompare(`${right.dayOfWeek}-${right.startTime}-${right.courseCode}`);
+  }
 }
 
 function buildGroupedRows(entries: TimetableEntry[], keySelector: (entry: TimetableEntry) => string) {
