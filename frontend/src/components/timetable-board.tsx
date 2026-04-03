@@ -10,7 +10,7 @@ const dayLabels: Record<string, string> = {
   THURSDAY: "Thursday",
   FRIDAY: "Friday"
 };
-const filterClassName = "w-full rounded-2xl border border-ink/10 bg-white px-4 py-3 text-sm text-ink outline-none transition focus:border-moss/35";
+const filterClassName = "w-full rounded-2xl border border-ink/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(244,239,230,0.82))] px-4 py-3 text-sm text-ink outline-none transition duration-300 focus:border-moss/35 focus:bg-white focus:shadow-[0_0_0_4px_rgba(31,92,75,0.08)]";
 
 function DraggableClass({ entry }: { entry: TimetableEntry }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: entry.id, data: entry });
@@ -20,7 +20,7 @@ function DraggableClass({ entry }: { entry: TimetableEntry }) {
       {...listeners}
       {...attributes}
       style={{ transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined }}
-      className="cursor-grab rounded-2xl border border-white/70 bg-white/90 p-3 text-sm text-ink shadow-sm transition hover:-translate-y-0.5"
+      className="cursor-grab rounded-2xl border border-white/70 bg-[linear-gradient(145deg,rgba(255,255,255,0.95),rgba(244,239,230,0.85))] p-3 text-sm text-ink shadow-[0_12px_22px_rgba(16,37,66,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_32px_rgba(16,37,66,0.14)]"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -45,7 +45,7 @@ function DraggableClass({ entry }: { entry: TimetableEntry }) {
 function DroppableCell({ slot, entries }: { slot: TimeSlot; entries: TimetableEntry[] }) {
   const { isOver, setNodeRef } = useDroppable({ id: slot.id, data: slot });
   return (
-    <div ref={setNodeRef} className={`min-h-36 rounded-3xl border p-3 transition ${isOver ? "border-ember bg-amber-50" : "border-white/60 bg-[#fffaf3]"}`}>
+    <div ref={setNodeRef} className={`min-h-36 rounded-3xl border p-3 transition duration-300 ${isOver ? "border-ember bg-[linear-gradient(135deg,rgba(255,240,229,0.92),rgba(255,255,255,0.96))] shadow-[0_18px_32px_rgba(217,108,61,0.12)]" : "border-white/60 bg-[linear-gradient(180deg,rgba(255,250,243,0.95),rgba(255,255,255,0.88))]"}`}>
       <div className="mb-3 flex items-center justify-between gap-3">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ink/55">{slot.label}</p>
         <span className="rounded-full bg-white/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink/45">{entries.length} item{entries.length === 1 ? "" : "s"}</span>
@@ -128,19 +128,20 @@ export function TimetableBoard({ timetable, timeSlots, rooms, onDrop }: Timetabl
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <div className="rounded-[1.75rem] border border-white/50 bg-white/90 p-5 shadow-panel">
+      <div className="glass-panel shimmer-border animate-rise rounded-[1.75rem] border border-white/55 p-5 shadow-panel">
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h3 className="text-xl font-semibold text-ink">Scheduling Studio</h3>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-moss">Timetable review</p>
+            <h3 className="mt-2 text-2xl font-semibold text-ink">Scheduling Studio</h3>
             <p className="mt-1 text-sm text-ink/70">See the final schedule by room, section, batch, department, program, or faculty using the same underlying timetable.</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <div className="rounded-full bg-moss/10 px-3 py-1 text-sm font-medium text-moss">{rooms.length} rooms available</div>
-            <div className="rounded-full bg-ink/5 px-3 py-1 text-sm font-medium text-ink/70">{filteredTimetable.length} scheduled sessions</div>
+            <div className="rounded-full bg-[linear-gradient(135deg,rgba(31,92,75,0.12),rgba(255,255,255,0.9))] px-3 py-2 text-sm font-medium text-moss shadow-sm">{rooms.length} rooms available</div>
+            <div className="rounded-full bg-[linear-gradient(135deg,rgba(16,37,66,0.06),rgba(255,255,255,0.92))] px-3 py-2 text-sm font-medium text-ink/70 shadow-sm">{filteredTimetable.length} scheduled sessions</div>
           </div>
         </div>
 
-        <div className="mb-6 space-y-4 rounded-[1.5rem] border border-ink/8 bg-sand/45 p-4">
+        <div className="mb-6 space-y-4 rounded-[1.5rem] border border-white/55 bg-[linear-gradient(145deg,rgba(244,239,230,0.72),rgba(255,255,255,0.88))] p-4 shadow-sm">
           <div className="flex flex-wrap gap-2">
             {[
               ["week", "Weekly board"],
@@ -153,7 +154,7 @@ export function TimetableBoard({ timetable, timeSlots, rooms, onDrop }: Timetabl
             ].map(([id, label]) => (
               <button
                 key={id}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition ${viewMode === id ? "bg-[linear-gradient(135deg,#102542,#1f5c4b)] text-white" : "bg-white text-ink/70"}`}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition duration-300 ${viewMode === id ? "bg-[linear-gradient(135deg,#102542,#1f5c4b)] text-white shadow-[0_14px_28px_rgba(16,37,66,0.18)]" : "bg-white/88 text-ink/70 shadow-sm hover:bg-white"}`}
                 onClick={() => setViewMode(id as typeof viewMode)}
                 type="button"
               >
@@ -205,7 +206,7 @@ export function TimetableBoard({ timetable, timeSlots, rooms, onDrop }: Timetabl
           <div className="grid gap-5 xl:grid-cols-5">
             {groupedByDay.map((group) => (
               <div key={group.day} className="space-y-3">
-                <div className="rounded-3xl bg-[linear-gradient(135deg,rgba(16,37,66,0.96),rgba(31,92,75,0.84))] px-4 py-4 text-white">
+                <div className="rounded-3xl bg-[linear-gradient(135deg,rgba(16,37,66,0.96),rgba(31,92,75,0.84))] px-4 py-4 text-white shadow-[0_20px_36px_rgba(16,37,66,0.18)]">
                   <p className="text-xs uppercase tracking-[0.25em] text-white/65">Day</p>
                   <h4 className="mt-2 text-lg font-semibold">{dayLabels[group.day]}</h4>
                   <p className="mt-1 text-xs text-white/70">{group.slots.length} time block{group.slots.length === 1 ? "" : "s"}</p>
@@ -256,20 +257,20 @@ function buildGroupedRows(entries: TimetableEntry[], keySelector: (entry: Timeta
 
 function GroupedTimetableList({ groups, emptyMessage }: { groups: Array<{ title: string; items: TimetableEntry[] }>; emptyMessage: string }) {
   if (groups.length === 0) {
-    return <div className="rounded-3xl border border-dashed border-ink/10 px-4 py-8 text-center text-sm text-ink/45">{emptyMessage}</div>;
+    return <div className="rounded-3xl border border-dashed border-ink/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.75),rgba(244,239,230,0.7))] px-4 py-8 text-center text-sm text-ink/45">{emptyMessage}</div>;
   }
 
   return (
     <div className="grid gap-4 xl:grid-cols-2">
       {groups.map((group) => (
-        <div key={group.title} className="rounded-3xl border border-ink/8 bg-[#fffaf3] p-4">
+        <div key={group.title} className="rounded-3xl border border-white/60 bg-[linear-gradient(145deg,rgba(255,250,243,0.95),rgba(255,255,255,0.9))] p-4 shadow-sm">
           <div className="mb-4">
             <p className="text-lg font-semibold text-ink">{group.title}</p>
             <p className="mt-1 text-xs uppercase tracking-[0.2em] text-ink/45">{group.items.length} scheduled item{group.items.length === 1 ? "" : "s"}</p>
           </div>
           <div className="space-y-3">
             {group.items.map((entry) => (
-              <div key={entry.id} className="rounded-2xl border border-white/70 bg-white/90 p-4 shadow-sm">
+              <div key={entry.id} className="rounded-2xl border border-white/70 bg-[linear-gradient(145deg,rgba(255,255,255,0.95),rgba(244,239,230,0.82))] p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(16,37,66,0.1)]">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-semibold text-ink">{entry.courseCode} · {entry.courseTitle}</p>

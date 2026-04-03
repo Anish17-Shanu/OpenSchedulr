@@ -47,10 +47,10 @@ type AdminSetupPanelProps = {
   onDeleteDemand: (demandId: string) => Promise<unknown>;
 };
 
-const cardShell = "rounded-[1.75rem] border border-white/50 bg-white/90 p-5 shadow-panel";
-const panelShell = "rounded-3xl border border-ink/8 p-5";
+const cardShell = "glass-panel shimmer-border animate-rise rounded-[1.75rem] border border-white/55 p-5 shadow-panel";
+const panelShell = "rounded-3xl border border-white/50 p-5 shadow-[0_18px_45px_rgba(16,37,66,0.08)] backdrop-blur";
 const inputClassName =
-  "w-full rounded-2xl border border-ink/10 bg-sand/65 px-4 py-3 text-sm text-ink outline-none transition focus:border-moss/35 focus:bg-white";
+  "w-full rounded-2xl border border-ink/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.88),rgba(244,239,230,0.78))] px-4 py-3 text-sm text-ink outline-none transition duration-300 focus:border-moss/35 focus:bg-white focus:shadow-[0_0_0_4px_rgba(31,92,75,0.08)]";
 
 export function AdminSetupPanel(props: AdminSetupPanelProps) {
   const {
@@ -240,6 +240,11 @@ export function AdminSetupPanel(props: AdminSetupPanelProps) {
           <p className="mt-3 max-w-3xl text-sm leading-7 text-ink/70">
             The admin can now add and alter academic structure data that directly drives scheduling and final timetable views.
           </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className="rounded-full bg-[linear-gradient(135deg,rgba(16,37,66,0.08),rgba(159,211,220,0.24))] px-3 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-ink/65 shadow-sm">Academic master data</span>
+            <span className="rounded-full bg-[linear-gradient(135deg,rgba(31,92,75,0.12),rgba(255,255,255,0.84))] px-3 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-ink/65 shadow-sm">Subject mapping</span>
+            <span className="rounded-full bg-[linear-gradient(135deg,rgba(217,108,61,0.12),rgba(255,255,255,0.84))] px-3 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-ink/65 shadow-sm">Publish-ready inputs</span>
+          </div>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
           <SetupCount icon={<Users className="h-4 w-4" />} label="Faculty" value={counts.faculty} />
@@ -250,10 +255,10 @@ export function AdminSetupPanel(props: AdminSetupPanelProps) {
         </div>
       </div>
 
-      {message ? <p className="mt-5 rounded-2xl border border-moss/15 bg-moss/5 px-4 py-3 text-sm text-moss">{message}</p> : null}
+      {message ? <p className="mt-5 rounded-2xl border border-moss/15 bg-[linear-gradient(135deg,rgba(31,92,75,0.12),rgba(255,255,255,0.9))] px-4 py-3 text-sm text-moss shadow-sm">{message}</p> : null}
 
       <div className="mt-6 grid gap-5 2xl:grid-cols-2">
-        <form className={`${panelShell} bg-mist/30`} onSubmit={(event) => {
+        <form className={`${panelShell} animate-fade-delay bg-[linear-gradient(145deg,rgba(220,230,233,0.62),rgba(255,255,255,0.88))]`} onSubmit={(event) => {
           event.preventDefault();
           facultyMutation.mutate();
         }}>
@@ -276,7 +281,7 @@ export function AdminSetupPanel(props: AdminSetupPanelProps) {
           </MutationFooter>
         </form>
 
-        <form className={`${panelShell} bg-sand/55`} onSubmit={(event) => {
+        <form className={`${panelShell} animate-fade-delay bg-[linear-gradient(145deg,rgba(244,239,230,0.82),rgba(255,255,255,0.92))]`} onSubmit={(event) => {
           event.preventDefault();
           courseMutation.mutate();
         }}>
@@ -301,7 +306,7 @@ export function AdminSetupPanel(props: AdminSetupPanelProps) {
           </MutationFooter>
         </form>
 
-        <form className={`${panelShell} bg-white`} onSubmit={(event) => {
+        <form className={`${panelShell} animate-fade-delay bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(220,230,233,0.42))]`} onSubmit={(event) => {
           event.preventDefault();
           roomMutation.mutate();
         }}>
@@ -319,7 +324,7 @@ export function AdminSetupPanel(props: AdminSetupPanelProps) {
           </MutationFooter>
         </form>
 
-        <form className={`${panelShell} bg-amber-50/70`} onSubmit={(event) => {
+        <form className={`${panelShell} animate-fade-delay bg-[linear-gradient(145deg,rgba(255,245,235,0.9),rgba(255,255,255,0.9))]`} onSubmit={(event) => {
           event.preventDefault();
           timeSlotMutation.mutate();
         }}>
@@ -342,7 +347,7 @@ export function AdminSetupPanel(props: AdminSetupPanelProps) {
       </div>
 
       <div className="mt-6 grid gap-5 2xl:grid-cols-[1.2fr_1fr]">
-        <form className={`${panelShell} bg-[linear-gradient(135deg,rgba(16,37,66,0.04),rgba(31,92,75,0.08))]`} onSubmit={(event) => {
+        <form className={`${panelShell} animate-fade-delay bg-[linear-gradient(135deg,rgba(16,37,66,0.06),rgba(31,92,75,0.12),rgba(255,255,255,0.88))]`} onSubmit={(event) => {
           event.preventDefault();
           demandMutation.mutate();
         }}>
@@ -380,7 +385,7 @@ export function AdminSetupPanel(props: AdminSetupPanelProps) {
           </div>
         </form>
 
-        <div className={`${panelShell} bg-white`}>
+        <div className={`${panelShell} animate-fade-delay bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(244,239,230,0.72))]`}>
           <SectionHeader icon={<History className="h-5 w-5 text-ink" />} title="Audit trail" subtitle="Recent admin and scheduling actions across the system." />
           <div className="mt-4 space-y-3">
             {auditLogs.length === 0 ? <EmptyState text="Audit activity will appear here after setup and scheduling actions." /> : auditLogs.map((log) => (
@@ -517,7 +522,7 @@ function mapTimeSlotForm(form: { dayOfWeek: string; startTime: string; endTime: 
 function SectionHeader({ icon, title, subtitle }: { icon: React.ReactNode; title: string; subtitle: string }) {
   return (
     <div className="flex items-start gap-3">
-      <div className="rounded-2xl bg-white/80 p-3 shadow-sm">{icon}</div>
+      <div className="rounded-2xl bg-[linear-gradient(145deg,rgba(255,255,255,0.95),rgba(220,230,233,0.82))] p-3 shadow-[0_12px_24px_rgba(16,37,66,0.1)]">{icon}</div>
       <div>
         <h3 className="text-lg font-semibold text-ink">{title}</h3>
         <p className="mt-1 text-sm leading-6 text-ink/65">{subtitle}</p>
@@ -528,7 +533,7 @@ function SectionHeader({ icon, title, subtitle }: { icon: React.ReactNode; title
 
 function SetupCount({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
   return (
-    <div className="rounded-2xl border border-ink/8 bg-white/80 px-4 py-3">
+    <div className="rounded-2xl border border-white/65 bg-[linear-gradient(145deg,rgba(255,255,255,0.92),rgba(244,239,230,0.74))] px-4 py-3 shadow-sm">
       <div className="flex items-center gap-2 text-ink/60">
         {icon}
         <span className="text-xs font-semibold uppercase tracking-[0.22em]">{label}</span>
@@ -557,7 +562,7 @@ function ResourceList({
   emptyText: string;
 }) {
   return (
-    <div className={`${panelShell} bg-white`}>
+    <div className={`${panelShell} animate-fade-delay bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(244,239,230,0.72))]`}>
       <h3 className="text-lg font-semibold text-ink">{title}</h3>
       <div className="mt-4 space-y-3">
         {items.length === 0 ? <EmptyState text={emptyText} /> : items.map((item) => (
@@ -580,7 +585,7 @@ function EditableRow({
   onDelete: () => void;
 }) {
   return (
-    <div className="flex items-start justify-between gap-3 rounded-2xl border border-ink/8 bg-sand/45 px-4 py-3">
+    <div className="flex items-start justify-between gap-3 rounded-2xl border border-white/60 bg-[linear-gradient(135deg,rgba(244,239,230,0.7),rgba(255,255,255,0.92))] px-4 py-3 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(16,37,66,0.08)]">
       <div>
         <p className="font-medium text-ink">{primary}</p>
         <p className="mt-1 text-sm text-ink/65">{secondary}</p>
@@ -601,7 +606,7 @@ function IconButton({ label, onClick, children }: { label: string; onClick: () =
   return (
     <button
       aria-label={label}
-      className="rounded-full border border-ember/15 bg-ember/5 p-2 text-ember transition hover:bg-ember/10"
+      className="rounded-full border border-ember/15 bg-[linear-gradient(135deg,rgba(217,108,61,0.08),rgba(255,255,255,0.94))] p-2 text-ember shadow-sm transition duration-300 hover:bg-ember/10 hover:shadow-md"
       onClick={onClick}
       type="button"
     >

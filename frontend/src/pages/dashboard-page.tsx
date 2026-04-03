@@ -156,7 +156,18 @@ export function DashboardPage() {
       <div className="aurora-orb right-[9%] top-[14%] h-52 w-52 bg-sky-200/50" style={{ animationDelay: "1.2s" }} />
       <div className="aurora-orb bottom-[12%] right-[14%] h-60 w-60 bg-moss/20" style={{ animationDelay: "2.4s" }} />
       <div className="mx-auto max-w-[1500px] px-4 py-6 md:px-8">
-        <div className="grid gap-6 xl:grid-cols-[280px_1fr]">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-[1.5rem] border border-white/50 bg-white/60 px-4 py-3 shadow-[0_12px_30px_rgba(16,37,66,0.08)] backdrop-blur">
+          <div className="flex flex-wrap items-center gap-3 text-sm text-ink/72">
+            <span className="section-kicker">Modern scheduling workspace</span>
+            <span className="rounded-full bg-ink/5 px-3 py-2 font-medium">Faculty planning</span>
+            <span className="rounded-full bg-ink/5 px-3 py-2 font-medium">Realtime review</span>
+          </div>
+          <div className="flex items-center gap-3 text-sm text-ink/65">
+            <span className="rounded-full bg-[linear-gradient(135deg,rgba(31,92,75,0.12),rgba(255,255,255,0.9))] px-3 py-2 font-medium">{timetable.length} sessions loaded</span>
+            <span className="rounded-full bg-[linear-gradient(135deg,rgba(217,108,61,0.12),rgba(255,255,255,0.9))] px-3 py-2 font-medium">{conflicts.length} conflict markers</span>
+          </div>
+        </div>
+        <div className="grid gap-6 xl:grid-cols-[300px_1fr]">
           <aside className="animate-rise rounded-[2rem] border border-white/50 bg-[linear-gradient(165deg,rgba(16,37,66,0.98),rgba(31,92,75,0.88))] p-6 text-white shadow-[0_24px_70px_rgba(16,37,66,0.24)]">
             <div className="flex items-center gap-3">
               <div className="rounded-2xl bg-white/10 p-3">
@@ -166,6 +177,12 @@ export function DashboardPage() {
                 <p className="text-xs uppercase tracking-[0.28em] text-white/65">OpenSchedulr</p>
                 <p className="mt-1 text-lg font-semibold">Operations Console</p>
               </div>
+            </div>
+
+            <div className="mt-6 rounded-[1.75rem] border border-white/12 bg-white/8 p-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-white/55">Control stance</p>
+              <p className="mt-3 text-2xl font-semibold">Studio mode</p>
+              <p className="mt-2 text-sm leading-6 text-white/70">A richer review flow for generation, conflict triage, manual overrides, and publication.</p>
             </div>
 
             <div className="mt-8 rounded-[1.75rem] border border-white/10 bg-white/10 p-5">
@@ -205,11 +222,11 @@ export function DashboardPage() {
           </aside>
 
           <main className="space-y-6">
-            <section className="glass-panel shimmer-border animate-rise rounded-[2rem] border border-white/50 p-6 shadow-panel">
-              <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <section className="mesh-card shimmer-border animate-rise overflow-hidden rounded-[2rem] border border-white/50 p-6 shadow-panel">
+              <div className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-moss">Campus planning</p>
-                  <h1 className="mt-3 text-4xl font-semibold tracking-tight text-ink">A clearer weekly view for faculty scheduling.</h1>
+                  <div className="section-kicker">Campus planning</div>
+                  <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight text-ink md:text-5xl">A clearer weekly view for faculty scheduling.</h1>
                   <p className="mt-4 max-w-3xl text-sm leading-7 text-ink/72">
                     Generate draft timetables, rebalance workloads, review conflicts, and publish changes with a planning surface that keeps both operations and faculty communication in one place.
                   </p>
@@ -218,15 +235,39 @@ export function DashboardPage() {
                     <span className="rounded-full bg-white/75 px-3 py-2 shadow-sm">Live admin controls</span>
                     <span className="rounded-full bg-white/75 px-3 py-2 shadow-sm">Publish-ready review</span>
                   </div>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-3xl border border-moss/10 bg-[linear-gradient(135deg,rgba(31,92,75,0.12),rgba(255,255,255,0.9))] px-4 py-4 shadow-sm">
-                    <p className="text-xs uppercase tracking-[0.22em] text-ink/50">Schedule status</p>
-                    <p className="mt-2 text-xl font-semibold text-ink">{timetable.length > 0 ? "Draft schedule active" : "Waiting for generation"}</p>
+                  <div className="mt-8 grid gap-4 md:grid-cols-3">
+                    <div className="hero-metric rounded-[1.5rem] border border-white/65 bg-white/74 p-4 shadow-[0_16px_34px_rgba(16,37,66,0.08)]">
+                      <p className="text-xs uppercase tracking-[0.22em] text-ink/46">Generator</p>
+                      <p className="mt-3 text-2xl font-semibold text-ink">{adminBusy ? "Working now" : "Ready"}</p>
+                      <p className="mt-2 text-sm text-ink/66">Draft generation and publication controls stay in the same decision loop.</p>
+                    </div>
+                    <div className="hero-metric rounded-[1.5rem] border border-white/65 bg-white/74 p-4 shadow-[0_16px_34px_rgba(16,37,66,0.08)]">
+                      <p className="text-xs uppercase tracking-[0.22em] text-ink/46">Review</p>
+                      <p className="mt-3 text-2xl font-semibold text-ink">{timetable.length > 0 ? "Schedule loaded" : "Waiting"}</p>
+                      <p className="mt-2 text-sm text-ink/66">Sort by faculty, room, section, batch, department, or program.</p>
+                    </div>
+                    <div className="hero-metric rounded-[1.5rem] border border-white/65 bg-white/74 p-4 shadow-[0_16px_34px_rgba(16,37,66,0.08)]">
+                      <p className="text-xs uppercase tracking-[0.22em] text-ink/46">Collaboration</p>
+                      <p className="mt-3 text-2xl font-semibold text-ink">{notifications.length} signals</p>
+                      <p className="mt-2 text-sm text-ink/66">Realtime updates and audit history keep changes visible across the team.</p>
+                    </div>
                   </div>
-                  <div className="rounded-3xl border border-ember/10 bg-[linear-gradient(135deg,rgba(217,108,61,0.12),rgba(255,255,255,0.9))] px-4 py-4 shadow-sm">
+                </div>
+                <div className="grid gap-4">
+                  <div className="soft-ring rounded-[1.75rem] border border-white/65 bg-[linear-gradient(145deg,rgba(31,92,75,0.12),rgba(255,255,255,0.92))] p-5">
+                    <p className="text-xs uppercase tracking-[0.22em] text-ink/50">Schedule status</p>
+                    <p className="mt-3 text-2xl font-semibold text-ink">{timetable.length > 0 ? "Draft schedule active" : "Waiting for generation"}</p>
+                    <p className="mt-3 text-sm leading-6 text-ink/68">Use generate to assemble a draft, then refine with drag-and-drop before publishing.</p>
+                  </div>
+                  <div className="soft-ring rounded-[1.75rem] border border-white/65 bg-[linear-gradient(145deg,rgba(217,108,61,0.12),rgba(255,255,255,0.92))] p-5">
                     <p className="text-xs uppercase tracking-[0.22em] text-ink/50">Last action</p>
-                    <p className="mt-2 text-xl font-semibold text-ink">{adminBusy ? "Processing update" : "Ready for next change"}</p>
+                    <p className="mt-3 text-2xl font-semibold text-ink">{adminBusy ? "Processing update" : "Ready for next change"}</p>
+                    <p className="mt-3 text-sm leading-6 text-ink/68">This workspace is designed to keep setup, review, and publication in one rhythm.</p>
+                  </div>
+                  <div className="rounded-[1.75rem] border border-ink/8 bg-[linear-gradient(135deg,rgba(16,37,66,0.95),rgba(31,92,75,0.82))] p-5 text-white shadow-[0_22px_45px_rgba(16,37,66,0.18)]">
+                    <p className="text-xs uppercase tracking-[0.22em] text-white/55">Experience goal</p>
+                    <p className="mt-3 text-xl font-semibold">Modern control room, not plain CRUD.</p>
+                    <p className="mt-3 text-sm leading-6 text-white/72">The scheduling surface now leans into layered cards, clearer hierarchy, and more motion so the app feels closer to a polished product.</p>
                   </div>
                 </div>
               </div>
@@ -316,7 +357,7 @@ export function DashboardPage() {
                 />
 
                 <div className="grid gap-4 xl:grid-cols-2">
-                  <div className="rounded-[1.75rem] border border-white/50 bg-white/90 p-5 shadow-panel">
+                  <div className="mesh-card rounded-[1.75rem] border border-white/50 p-5 shadow-panel">
                     <div className="flex items-center gap-3">
                       <ChartColumn className="h-5 w-5 text-moss" />
                       <div>
@@ -339,7 +380,7 @@ export function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="rounded-[1.75rem] border border-white/50 bg-white/90 p-5 shadow-panel">
+                  <div className="mesh-card rounded-[1.75rem] border border-white/50 p-5 shadow-panel">
                     <div className="flex items-center gap-3">
                       <BellRing className="h-5 w-5 text-ember" />
                       <div>
