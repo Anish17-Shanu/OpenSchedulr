@@ -49,7 +49,7 @@ import { NotificationPanel } from "../components/notification-panel";
 import { TimetableBoard } from "../components/timetable-board";
 import { AdminSetupPanel } from "../components/admin-setup-panel";
 import { Button } from "../components/ui/button";
-import type { NotificationItem } from "../types";
+import type { NotificationItem, TimetableEntry } from "../types";
 
 export function DashboardPage() {
   const queryClient = useQueryClient();
@@ -62,9 +62,20 @@ export function DashboardPage() {
   const timeSlotsQuery = useQuery({ queryKey: ["timeslots"], queryFn: getTimeSlots });
   const demandsQuery = useQuery({ queryKey: ["lecture-demands"], queryFn: getLectureDemands, enabled: role === "ADMIN" });
   const auditLogsQuery = useQuery({ queryKey: ["audit-logs"], queryFn: getAuditLogs, enabled: role === "ADMIN" });
-  const timetableQuery = useQuery({ queryKey: ["timetable"], queryFn: getTimetable });
+  const timetableQuery = useQuery({
+    queryKey: ["timetable"],
+    queryFn: getTimetable,
+    refetchInterval: (query) => {
+      const items = (query.state.data as TimetableEntry[] | undefined) ?? [];
+      return items.length === 0 ? 10000 : false;
+    }
+  });
   const conflictsQuery = useQuery({ queryKey: ["conflicts"], queryFn: getConflicts });
-  const analyticsQuery = useQuery({ queryKey: ["analytics"], queryFn: getAnalytics });
+  const analyticsQuery = useQuery({
+    queryKey: ["analytics"],
+    queryFn: getAnalytics,
+    refetchInterval: () => ((timetableQuery.data?.length ?? 0) === 0 ? 10000 : false)
+  });
   const notificationsQuery = useQuery({
     queryKey: ["notifications", email],
     queryFn: () => getFacultyNotifications(email!),
