@@ -18,6 +18,7 @@ Use this combination if you want the least friction:
 4. Render should detect:
    `rootDir=backend`
    `dockerfilePath=./Dockerfile`
+   The runtime image uses Java 21 JDK because OptaPlanner needs a compiler available at runtime on hosted deployments.
 5. Attach a free PostgreSQL database from Neon or Supabase.
 6. Set these environment variables:
 
@@ -39,7 +40,7 @@ BOOTSTRAP_ADMIN_PASSWORD=Admin@123
 ```
 
 7. Health check path:
-   `/api/actuator/health`
+   `/api/actuator/health/liveness`
 
 ## Vercel frontend
 
@@ -66,7 +67,7 @@ VITE_API_ROOT=https://<your-render-backend>/api
 - Forgetting that Vite needs `VITE_*` env vars at build time
 - Using Neon credentials without enabling `SPRING_PROFILES_ACTIVE=postgres`
 - Supplying only raw `PG*` values to older app config that expects `DB_URL`
-- Not setting the Render health check path to `/api/actuator/health`
+- Not setting the Render health check path to `/api/actuator/health/liveness`
 - Forgetting to rotate secrets after testing
 
 ## Quick platform checklist
@@ -76,7 +77,7 @@ VITE_API_ROOT=https://<your-render-backend>/api
 - Repo connected
 - Root directory: `backend`
 - Dockerfile: `./Dockerfile`
-- Health path: `/api/actuator/health`
+- Health path: `/api/actuator/health/liveness`
 - Env vars set
 
 ### Vercel

@@ -291,6 +291,7 @@ It runs:
 - Backend on Render free tier using [render.yaml](/d:/Project/OpenSchedulr/render.yaml)
 - PostgreSQL on Neon or Supabase free tier
 - Frontend on Vercel free tier using either the root [vercel.json](/d:/Project/OpenSchedulr/vercel.json) or [frontend/vercel.json](/d:/Project/OpenSchedulr/frontend/vercel.json)
+- The backend Docker runtime uses Java 21 JDK so OptaPlanner can initialize correctly on hosted instances
 
 ### Option 2: Full self-hosted Docker
 
@@ -341,6 +342,7 @@ It runs:
    `APP_SEED_DEMO_ENABLED=true`
    `APP_HOSTED_SCHEDULE_ENABLED=true`
    `APP_REALTIME_ENABLED=false`
+   Render health check path: `/api/actuator/health/liveness`
 4. Deploy frontend to Vercel
 5. Set Vercel env vars:
    `VITE_API_BASE_URL=https://<render-backend>/api`
