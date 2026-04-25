@@ -2,7 +2,6 @@ package com.openschedulr.timetable.service;
 
 import com.openschedulr.audit.service.AuditService;
 import com.openschedulr.common.exception.NotFoundException;
-import com.openschedulr.scheduling.repository.LectureDemandRepository;
 import com.openschedulr.timetable.dto.CreateRoomRequest;
 import com.openschedulr.timetable.dto.CreateTimeSlotRequest;
 import com.openschedulr.timetable.dto.RoomResponse;
