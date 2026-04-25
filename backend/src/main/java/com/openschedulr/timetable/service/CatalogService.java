@@ -25,7 +25,6 @@ public class CatalogService {
     private final RoomRepository roomRepository;
     private final TimeSlotRepository timeSlotRepository;
     private final TimetableEntryRepository timetableEntryRepository;
-    private final LectureDemandRepository lectureDemandRepository;
     private final AuditService auditService;
 
     @Transactional(readOnly = true)
